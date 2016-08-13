@@ -8,11 +8,13 @@ def home(request):
 
 
 def store(request):
-    query = request.GET.get("q")
-    if query:
-        print(str(query))
-        m = Mqtt(msg=query)
+    message = request.GET.get("q")
+    topic = request.GET.get("t")
+
+    if message:
+        print(str(message))
+        m = Mqtt(msg=message)
         m.time = timezone.now()
-        m.topic = "none"
+        m.topic = topic
         m.save()
     return redirect("mysite:home")
