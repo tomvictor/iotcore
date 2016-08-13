@@ -4,7 +4,8 @@ from django.utils import timezone
 # Create your views here.
 
 def home(request):
-    return render(request,'home.html',{})
+    allmessages = Mqtt.objects.order_by("-time")
+    return render(request,'home.html',{"objects":allmessages})
 
 
 def store(request):
