@@ -19,5 +19,5 @@ from mysite import urls
 urlpatterns = [
     url(r'^admin/$', admin.site.urls),
     url(r'', include('mysite.urls', namespace='mysite')),
-    url(r'^api/$', include('mysite.api.urls', namespace='restapi')),
+    url(r'^api/', include('mysite.api.urls', namespace='restapi')),
 ]
