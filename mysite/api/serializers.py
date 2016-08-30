@@ -9,6 +9,17 @@ class MsgListSerializer(ModelSerializer):
             'msg',
         ]
 
+class MsgCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Mqtt
+        fields = [
+            'id',
+            'msg',
+            'topic',
+            'time',
+        ]
+
+
 class MsgDetailSerializer(ModelSerializer):
     class Meta:
         model = Mqtt
