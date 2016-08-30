@@ -13,10 +13,10 @@ class MsgCreateSerializer(ModelSerializer):
     class Meta:
         model = Mqtt
         fields = [
-            'id',
+            #'id',
             'msg',
             'topic',
-            'time',
+            #'time',
         ]
 
 
