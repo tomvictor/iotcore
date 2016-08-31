@@ -1,10 +1,14 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,HyperlinkedIdentityField
 from mysite.models import Mqtt
 
 class MsgListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='restapi:api-detail'
+    )
     class Meta:
         model = Mqtt
         fields = [
+            'url',
             'id',
             'msg',
         ]
