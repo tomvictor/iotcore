@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="51ab4f67-0053-42a8-875e-750c0919d2fc" name="azure ssd" url="http://iot.technorip.com">
-        <fileTransfer host="13.67.211.234" port="22" privateKey="$PROJECT_DIR$/../../../server-folder/ProductionServer" rootFolder="/home/technorip/www/" accessType="SFTP" username="technorip" keyPair="true">
+        <fileTransfer host="13.67.211.234" port="22" privateKey="$USER_HOME$/Documents/server-folder/ProductionServer" rootFolder="/home/technorip/www/djangoiot" accessType="SFTP" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from .models import Mqtt
 from django.utils import timezone
 # Create your views here.
@@ -18,4 +19,6 @@ def store(request):
         m.time = timezone.now()
         m.topic = topic
         m.save()
-    return redirect("mysite:home")
+        return HttpResponse("OK,data stored in database")
+    else:
+        return redirect("mysite:home")
