@@ -16,7 +16,7 @@
 <body>
 
 
-<h2 style="text-align: center"> Technorip IoT</h2>
+<h2 style="text-align: center"> Technorip IoT | <a href="/api/">APIs</a> | <a href="/api/create/">Create</a> | GET (/log/?lat=value1&long=value2&device_id=value3)</h2>
 
 
     <table class="table table-hover">
@@ -24,16 +24,21 @@
         <thead>
         <tr>
             <th>Date/Time</th>
-            <th>Message</th>
-            <th>Topic</th>
+            <th>Device ID</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Speed</th>
         </tr>
         </thead>
         <tbody>
         {% for object in objects %}
             <tr>
+
                 <td> {{ object.time }} </td>
-                <td> {{ object.msg }} </td>
-                <td> {{ object.topic }} </td>
+                <td>{{ object.deviceId }}</td>
+                <td> {{ object.lat }} </td>
+                <td> {{ object.long }} </td>
+            <td>  {{ object.speed }}  </td>
 
             </tr>
 

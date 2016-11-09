@@ -4,10 +4,13 @@ from .models import Mqtt,Gps
 from django.utils import timezone
 # Create your views here.
 
-def home(request):
-    allmessages = Mqtt.objects.order_by("-time")
-    return render(request,'home.html',{"objects":allmessages})
 
+def home(request):
+    all_entries = Gps.objects.order_by("-time")
+    context_pass = {
+        "objects":all_entries
+    }
+    return render(request,'home.html',context_pass)
 
 def store(request):
     message = request.GET.get("q")
@@ -23,13 +26,6 @@ def store(request):
     else:
         return redirect("mysite:home")
 
-
-def home2(request):
-    all_entries = Gps.objects.order_by("-time")
-    context_pass = {
-        "objects":all_entries
-    }
-    return render(request,'home.html',context_pass)
 
 def log_data(request):
     if request.method == 'GET':
