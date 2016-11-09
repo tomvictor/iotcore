@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Mqtt
+from .models import Mqtt,Gps
 from django.utils import timezone
 # Create your views here.
 
@@ -20,5 +20,25 @@ def store(request):
         m.topic = topic
         m.save()
         return HttpResponse("OK,data stored in database")
+    else:
+        return redirect("mysite:home")
+
+
+def home2(request):
+    all_entries = Gps.objects.order_by("-time")
+    context_pass = {
+        "objects":all_entries
+    }
+    return render(request,'home.html',context_pass)
+
+def log_data(request):
+    if request.method == 'GET':
+        lat_info = request.GET.get("lat")
+        long_info = request.GET.get("long")
+        device_info = request.GET.get("device_id")
+        this_object = Gps(lat=lat_info,long=long_info,deviceId=device_info)
+        this_object.save()
+        print(lat_info)
+        return HttpResponse("Ok, Data Stored")
     else:
         return redirect("mysite:home")
