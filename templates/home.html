@@ -19,35 +19,91 @@
         width: 100%;
        }
     </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#div1").load("http://iot.buildfromzero.com/api/map/?format=json");
+
+});
+</script>
+
 </head>
 <body>
 
 
-<h2 style="text-align: center"> Technorip IoT | <a href="/api/">APIs</a> | <a href="/api/create/">Create</a> | GET (/log/?lat=value1&long=value2&device_id=value3)</h2>
+<h2 style="text-align: center"> Technorip IoT | <a href="/api/">APIs</a> | <a href="/api/create/">Create</a> | GET (/log/?lat=value1&lng=value2&device_id=value3)</h2>
 
 
 
-<h3 style="text-align: center">Current Location</h3>
-    <div id="map"></div>
+{##}
+{#<h3 style="text-align: center">Current Location</h3>#}
+{##}
+{#    <div id="map"></div>#}
+{#    <script>#}
+{#      function initMap() {#}
+{#        var uluru = {lat: {{ lat }}, lng: {{ lng }} };#}
+{#        var map = new google.maps.Map(document.getElementById('map'), {#}
+{#          zoom: 14,#}
+{#          center: uluru#}
+{#        });#}
+{#        var marker = new google.maps.Marker({#}
+{#          position: uluru,#}
+{#          map: map#}
+{#        });#}
+{##}
+{##}
+{##}
+{##}
+{#      }#}
+{#    </script>#}
+{#    <script async defer#}
+{#    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9a2IA4bCX2nRqDwW4ttHqy7THyjjxFCk&callback=initMap">#}
+{#    </script>#}
+
+
+<div id="map"></div>
     <script>
+
+      // This example creates a 2-pixel-wide red polyline showing the path of William
+      // Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
+      // Brisbane, Australia.
+
       function initMap() {
-        var uluru = {lat: {{ lat }}, lng: {{ long }} };
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
+          zoom: 3,
+          center: {lat: 0, lng: -180},
+          mapTypeId: 'terrain'
         });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
+
+          var Coordinates = [
+              {% for object in mapobjects %}
+                  {lat: {{ object.lat }}, lng: {{ object.lng }} },
+              {% endfor %}
+        ];
+
+        var flightPath = new google.maps.Polyline({
+          path: Coordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
         });
+
+        flightPath.setMap(map);
       }
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9a2IA4bCX2nRqDwW4ttHqy7THyjjxFCk&callback=initMap">
     </script>
 
+<br>
+<h4 style="text-align: center">Json Data Using Ajax </h4>
+<h3 style="text-align: center">http://iot.buildfromzero.com/api/map/?format=json</h3>
+<div id="div1" style="text-align: center"></div>
 
 <br>
+<h1 style="text-align: center">Data Table</h1>
 
     <table class="table table-hover">
 
@@ -67,7 +123,7 @@
                 <td> {{ object.time }} </td>
                 <td>{{ object.deviceId }}</td>
                 <td> {{ object.lat }} </td>
-                <td> {{ object.long }} </td>
+                <td> {{ object.lng }} </td>
             <td>  {{ object.speed }} km/hr </td>
 
             </tr>
@@ -84,7 +140,7 @@
       setTimeout(function () {
 
           window.location.reload(2);
-      },60000);
+      },120000);
   });
 </script>
 </html>
