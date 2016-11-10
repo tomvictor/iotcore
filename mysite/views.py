@@ -7,8 +7,13 @@ from django.utils import timezone
 
 def home(request):
     all_entries = Gps.objects.order_by("-time")
+    latest = Gps.objects.last()
+    # print(latest.lat)
+
     context_pass = {
-        "objects":all_entries
+        "objects":all_entries,
+        "lat":latest.lat,
+        "long":latest.long,
     }
     return render(request,'home.html',context_pass)
 

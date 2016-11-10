@@ -12,12 +12,42 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+<style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
 </head>
 <body>
 
 
 <h2 style="text-align: center"> Technorip IoT | <a href="/api/">APIs</a> | <a href="/api/create/">Create</a> | GET (/log/?lat=value1&long=value2&device_id=value3)</h2>
 
+
+
+<h3 style="text-align: center">Current Location</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: {{ lat }}, lng: {{ long }} };
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    </script>
+
+
+<br>
 
     <table class="table table-hover">
 
@@ -38,7 +68,7 @@
                 <td>{{ object.deviceId }}</td>
                 <td> {{ object.lat }} </td>
                 <td> {{ object.long }} </td>
-            <td>  {{ object.speed }}  </td>
+            <td>  {{ object.speed }} km/hr </td>
 
             </tr>
 
@@ -54,7 +84,7 @@
       setTimeout(function () {
 
           window.location.reload(2);
-      },8000);
+      },60000);
   });
 </script>
 </html>
