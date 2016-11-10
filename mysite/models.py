@@ -13,7 +13,7 @@ class Mqtt(models.Model):
 
 class Gps(models.Model):
     lat = models.CharField(max_length=500,blank=True)
-    long = models.CharField(max_length=500,blank=True)
+    lng = models.CharField(max_length=500,blank=True)
     speed = models.CharField(max_length=500,blank=True)
     time = models.DateTimeField(auto_now=False,auto_now_add=True)
     deviceId = models.CharField(max_length=500, blank=True)

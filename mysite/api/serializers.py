@@ -11,10 +11,18 @@ class MsgListSerializer(ModelSerializer):
             'url',
             'id',
             'lat',
-            'long',
+            'lng',
             'speed',
             'deviceId',
             'time'
+        ]
+
+class MapSerializer(ModelSerializer):
+    class Meta:
+        model = Gps
+        fields = [
+            'lat',
+            'lng',
         ]
 
 class MsgCreateSerializer(ModelSerializer):
@@ -22,7 +30,7 @@ class MsgCreateSerializer(ModelSerializer):
         model = Gps
         fields = [
             'lat',
-            'long',
+            'lng',
             'speed',
             'deviceId',
         ]
@@ -34,7 +42,7 @@ class MsgDetailSerializer(ModelSerializer):
         fields = [
             'id',
             'lat',
-            'long',
+            'lng',
             'speed',
             'deviceId',
             'time'
