@@ -50,3 +50,13 @@ def log_data(request):
         return HttpResponse("Ok, Data Stored")
     else:
         return redirect("mysite:home")
+
+
+def latest_entry(request):
+    queryset = Gps.objects.last()
+    object_pk = queryset.pk
+    #print(object_pk)
+    url = str(object_pk)
+    url = "/api/"+ url + "/" + "?format=json"
+    print(url)
+    return redirect(url)
