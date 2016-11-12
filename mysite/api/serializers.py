@@ -1,37 +1,51 @@
 from rest_framework.serializers import ModelSerializer,HyperlinkedIdentityField
-from mysite.models import Mqtt
+from mysite.models import Mqtt,Gps
 
 class MsgListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='restapi:api-detail'
     )
     class Meta:
-        model = Mqtt
+        model = Gps
         fields = [
             'url',
             'id',
-            'msg',
+            'lat',
+            'lng',
+            'speed',
+            'deviceId',
+            'time'
+        ]
+
+class MapSerializer(ModelSerializer):
+    class Meta:
+        model = Gps
+        fields = [
+            'lat',
+            'lng',
         ]
 
 class MsgCreateSerializer(ModelSerializer):
     class Meta:
-        model = Mqtt
+        model = Gps
         fields = [
-            #'id',
-            'msg',
-            'topic',
-            #'time',
+            'lat',
+            'lng',
+            'speed',
+            'deviceId',
         ]
 
 
 class MsgDetailSerializer(ModelSerializer):
     class Meta:
-        model = Mqtt
+        model = Gps
         fields = [
             'id',
-            'msg',
-            'topic',
-            'time',
+            'lat',
+            'lng',
+            'speed',
+            'deviceId',
+            'time'
         ]
 
 
