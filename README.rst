@@ -1,6 +1,11 @@
 djangoiot (Under development)
 =============================
 
+.. image:: https://readthedocs.org/projects/djangoiot/badge/?version=latest
+:target: https://djangoiot.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
+
 djangoiot help django app to communicate over MQTT. This will enable IoT
 devices to talk directly to a web apps, database and algorithms. This will help IoT perfectionists
 to forgive HTTP and still use hardware with 4KB RAM.
@@ -14,6 +19,9 @@ Look how easy it is to use::
     new_broker.subscribe("topic/hello")
     new_broker.send_message("topic/hello", "message")
 
+
+For full documentation, visit `djangoiot.readthedocs.io
+<https://djangoiot.readthedocs.io/en/latest/>`__.
 
 Features
 --------
