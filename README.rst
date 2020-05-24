@@ -1,5 +1,5 @@
-djangoiot
-=========
+djangoiot (Under development)
+=============================
 
 djangoiot help django app to communicate over MQTT. This will enable IoT
 devices to talk directly to a web apps, database and algorithms. This will help IoT perfectionists
