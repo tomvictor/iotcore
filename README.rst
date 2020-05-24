@@ -6,9 +6,11 @@ djangoiot (Under development)
     :alt: Documentation Status
 
 
-djangoiot help django app to communicate over MQTT. This will enable IoT
-devices to talk directly to a web apps, database and algorithms. This will help IoT perfectionists
-to forgive HTTP and still use hardware with 4KB RAM.
+Djangoiot helps the Django app to effectively communicate over MQTT. Moreover,
+it enables the IoT devices to communicate directly with the web apps, database
+as well as algorithms.  The IoT era calls for a new connectivity protocol that
+guarantees minimum data consumption and greater reliability. Therefore,
+MQTT is more suitable than HTTP since it ensures complete support for actual physical devices.
 
 Look how easy it is to use::
 

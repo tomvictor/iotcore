@@ -1,8 +1,10 @@
 History
 =======
 
-I started this as a random project to experiment with mqtt long back in 2016.
-At that time software is new to me, because I am coming from electronics world.
-I just created the repo added some code then leave it. Later I noticed that people
-are searching for drf-mqtt package. So after a long set back of 4 years, I am restarting
-the project.
+I started the djangoiot project back in 2016. It was a
+busy season of my life. I was working full-time for my electronic startup
+company during that time and barely had any ideas about software development.
+I just created the repo, added some code, and then procrastinated it at that
+time. Recently, I noticed that more people are searching for drf-mqtt packages online.
+Besides I got messages and emails enquiring about djangoiot and MQTT. So, after
+the long 4 years, I finally got into execution mode and decided to restart my project.
