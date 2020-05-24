@@ -8,7 +8,7 @@ to forgive HTTP and still use hardware with 4KB RAM.
 Look how easy it is to use::
 
     from djangoiot.shortcuts import device,subscribe
-    from djnagoiot import broker
+    from djangoiot import broker
 
     new_broker = broker.register(host="localhost", port=8001)
     new_broker.subscribe("topic/hello")
