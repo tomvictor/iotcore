@@ -25,7 +25,7 @@ extras_require["dev"] = (
     + extras_require["doc"]  # noqa: W504  # noqa: W504
 )
 
-
+master_doc = 'index'
 setup(
     name="djangoiot",
     version="0.0.2",
