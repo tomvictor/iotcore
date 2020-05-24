@@ -5,6 +5,9 @@ djangoiot (Under development)
     :target: https://djangoiot.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://travis-ci.org/Tomvictor/djangoiot.svg?branch=master
+    :target: https://travis-ci.org/Tomvictor/djangoiot
+
 
 Djangoiot helps the Django app to effectively communicate over MQTT. Moreover,
 it enables the IoT devices to communicate directly with the web apps, database
