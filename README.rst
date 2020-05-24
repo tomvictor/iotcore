@@ -2,8 +2,8 @@ djangoiot (Under development)
 =============================
 
 .. image:: https://readthedocs.org/projects/djangoiot/badge/?version=latest
-:target: https://djangoiot.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+    :target: https://djangoiot.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 
 djangoiot help django app to communicate over MQTT. This will enable IoT
