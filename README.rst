@@ -45,4 +45,4 @@ If you are having issues, please let raise issue on github.
 License
 -------
 
-The project is licensed under the BSD license.
+The project is licensed under the MIT license.
