@@ -28,8 +28,8 @@ extras_require["dev"] = (
 master_doc = "index"
 setup(
     name="djangoiot",
-    version="0.0.2",
-    url="https://github.com/tomvictor/djnagoiot",
+    version="0.0.2b",
+    url="https://github.com/tomvictor/djangoiot",
     license="MIT",
     description="Enable IoT in you django app",
     long_description=open("README.rst", "r", encoding="utf-8").read(),
