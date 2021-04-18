@@ -10,7 +10,7 @@ click==7.1.2
 distlib==0.3.0
 Django==3.0.14
 django-filter==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 djangorestframework-simplejwt==4.4.0
 docutils==0.16
 filelock==3.0.12
