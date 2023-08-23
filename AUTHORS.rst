@@ -1,6 +1,0 @@
-Authors
--------
-
-* Tom Victor (Creator)
-
-
