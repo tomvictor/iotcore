@@ -5,36 +5,16 @@ djangoiot (Under development)
     :target: https://djangoiot.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://travis-ci.org/Tomvictor/djangoiot.svg?branch=master
-    :target: https://travis-ci.org/Tomvictor/djangoiot
 
+Project under development
 
-Djangoiot helps the Django app to effectively communicate over MQTT. Moreover,
-it enables the IoT devices to communicate directly with the web apps, database
-as well as algorithms.  The IoT era calls for a new connectivity protocol that
-guarantees minimum data consumption and greater reliability. Therefore,
-MQTT is more suitable than HTTP since it ensures complete support for actual physical devices.
-
-Look how easy it is to use::
-
-    from djangoiot.shortcuts import device,subscribe
-    from djangoiot import broker
-
-    new_broker = broker.register(host="localhost", port=8001)
-    new_broker.subscribe("topic/hello")
-    new_broker.send_message("topic/hello", "message")
-
-
-For full documentation, visit `djangoiot.readthedocs.io
-<https://djangoiot.readthedocs.io/en/latest/>`__.
-
-Features
+Planned Features
 --------
 
-- Add and configure broker
-- Send message over MQTT
-- Receive from MQTT broker
-- Broadcast message over MQTT topics
+- MQTT based IoT protocol
+- Easy sensor data storage
+- IoT APIs
+- Most of the IoT logics will be handled by inbuilt golang application and it will then communicate with the django using channels
 
 Installation
 ------------

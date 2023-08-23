@@ -27,8 +27,8 @@ extras_require["dev"] = (
 
 master_doc = "index"
 setup(
-    name="djangoiot",
-    version="0.0.2b",
+    name="dev",
+    version="0.0.4",
     url="https://github.com/tomvictor/djangoiot",
     license="MIT",
     description="Enable IoT in you django app",
@@ -37,9 +37,6 @@ setup(
     author_email="vjtomvictor@gmail.com",
     install_requires=[
         "django",
-        "djangorestframework",
-        "djangorestframework-simplejwt",
-        "paho-mqtt",
     ],
     python_requires=">=3.6",
     extras_require=extras_require,
@@ -47,6 +44,7 @@ setup(
         exclude=["tests", "docs", "tests.*", "licenses", "requirements"]
     ),
     include_package_data=True,
+    package_data={"": ["goiot"]},
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
