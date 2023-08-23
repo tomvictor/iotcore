@@ -4,6 +4,8 @@ from setuptools import (
     find_packages,
 )
 
+GO_BINARY = "goiotbackend"
+
 extras_require = {
     "test": [
         "cryptography",
@@ -44,7 +46,7 @@ setup(
         exclude=["tests", "docs", "tests.*", "licenses", "requirements"]
     ),
     include_package_data=True,
-    package_data={"": ["iot"]},
+    package_data={"": [GO_BINARY]},
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
