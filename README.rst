@@ -17,6 +17,20 @@ Planned Features
 - Most of the IoT logics will be handled by inbuilt golang application and it will then communicate with the django using channels
 
 
+Development
+-----------
+
+Invoke mage by running::
+
+    mage
+    Targets:
+      bootstrap    project
+      build        djangoiot
+      clean        the builds
+      dev          Clean, Build and Install dev version
+
+
+
 Contribute
 ----------
 
