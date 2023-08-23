@@ -1,16 +1,33 @@
 from django.apps import AppConfig
 import subprocess
 import os
+import psutil
 
 
-def get_goiot_executable_path():
+# TODO: read it from settings
+GO_BINARY = "goiotbackend"
+
+
+def get_iot_executable_path():
     # Get the path of the current file
     current_file_path = os.path.abspath(__file__)
+    return os.path.join(os.path.dirname(current_file_path), GO_BINARY)
 
-    # Append the "goiot" executable filename to the current file path
-    goiot_executable_path = os.path.join(os.path.dirname(current_file_path), "iot")
 
-    return goiot_executable_path
+def is_process_running(process_name):
+    for process in psutil.process_iter(attrs=['name']):
+        if process.name() == process_name:
+            return True
+    return False
+
+
+def run_iot_backend():
+    if is_process_running(GO_BINARY):
+        print("Go process already running!")
+    else:
+        subprocess.Popen(["pwd"])
+        print("Starting Go process...")
+        subprocess.Popen([get_iot_executable_path()])
 
 
 class IotConfig(AppConfig):
@@ -18,6 +35,4 @@ class IotConfig(AppConfig):
     name = "djangoiot"
 
     def ready(self):
-        subprocess.Popen(["pwd"])
-        print(get_goiot_executable_path())
-        subprocess.Popen([get_goiot_executable_path()])
+        run_iot_backend()
