@@ -16,13 +16,6 @@ Planned Features
 - IoT APIs
 - Most of the IoT logics will be handled by inbuilt golang application and it will then communicate with the django using channels
 
-Installation
-------------
-
-Install djangoiot by running::
-
-    pip install djangoiot
-
 
 Contribute
 ----------
