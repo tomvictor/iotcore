@@ -44,7 +44,7 @@ setup(
         exclude=["tests", "docs", "tests.*", "licenses", "requirements"]
     ),
     include_package_data=True,
-    package_data={"": ["goiot"]},
+    package_data={"": ["iot"]},
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",

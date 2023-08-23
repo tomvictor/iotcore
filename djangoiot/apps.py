@@ -8,7 +8,7 @@ def get_goiot_executable_path():
     current_file_path = os.path.abspath(__file__)
 
     # Append the "goiot" executable filename to the current file path
-    goiot_executable_path = os.path.join(os.path.dirname(current_file_path), "goiot")
+    goiot_executable_path = os.path.join(os.path.dirname(current_file_path), "iot")
 
     return goiot_executable_path
 
