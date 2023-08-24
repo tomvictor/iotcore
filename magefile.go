@@ -12,8 +12,6 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-const GoBinaryName = "goiotbackend"
-
 type Project struct {
 	Version       string `json:"version"`
 	GoBinaryName  string `json:"gobinary"`
@@ -26,7 +24,19 @@ func (p *Project) Dist() string {
 
 func (p *Project) GoBinary() string {
 	//TODO: suffix platform
-	return p.GoBinaryName
+	return fmt.Sprintf("%s", p.GoBinaryName)
+}
+
+func (p *Project) MacBinary() string {
+	return fmt.Sprintf("%s-mac-%s", p.GoBinaryName, p.Version)
+}
+
+func (p *Project) WindowsBinary() string {
+	return fmt.Sprintf("%s-win-%s.exe", p.GoBinaryName, p.Version)
+}
+
+func (p *Project) LinuxBinary() string {
+	return fmt.Sprintf("%s-linux-%s", p.GoBinaryName, p.Version)
 }
 
 var ProjectConf *Project
@@ -56,6 +66,7 @@ func Config() *Project {
 // Bootstrap project
 func Bootstrap() {
 	fmt.Println("Bootstrapping...")
+	//TODO: Add the virtualenv creation and pip install scripts here
 }
 
 func Settings() {
@@ -68,11 +79,27 @@ func BuildGo() error {
 
 	c := Config()
 
-	if err := sh.RunV("go", "build", "-o", c.GoBinary()); err != nil {
+	if err := sh.RunV("env", "GOOS=darwin", "go", "build", "-o", c.MacBinary()); err != nil {
 		return err
 	}
 
-	if err := sh.RunV("mv", c.GoBinary(), c.PyPackageName); err != nil {
+	if err := sh.RunV("env", "GOOS=windows", "go", "build", "-o", c.WindowsBinary()); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("env", "GOOS=linux", "go", "build", "-o", c.LinuxBinary()); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("mv", c.MacBinary(), c.PyPackageName); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("mv", c.WindowsBinary(), c.PyPackageName); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("mv", c.LinuxBinary(), c.PyPackageName); err != nil {
 		return err
 	}
 

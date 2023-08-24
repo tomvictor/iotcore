@@ -2,10 +2,18 @@ from django.apps import AppConfig
 import subprocess
 import os
 import psutil
+import platform
 
+BINARY = "goiotbackend"
+VERSION = "0.0.6"
 
-# TODO: read it from settings
-GO_BINARY = "goiotbackend"
+BINARY_MAP = {
+    "Darwin": f"{BINARY}-mac-{VERSION}",
+    "Windows": f"{BINARY}-win-{VERSION}.exe",
+    "Linux": f"{BINARY}-linux-{VERSION}",
+}
+
+GO_BINARY = BINARY_MAP[platform.system()]
 
 
 def get_iot_executable_path():
@@ -25,7 +33,6 @@ def run_iot_backend():
     if is_process_running(GO_BINARY):
         print("Go process already running!")
     else:
-        subprocess.Popen(["pwd"])
         print("Starting Go process...")
         subprocess.Popen([get_iot_executable_path()])
 

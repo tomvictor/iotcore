@@ -6,9 +6,11 @@ Project under development. Apis can change often until stable.
 ## Planned Features
 
 * MQTT based IoT protocol 
+* MQTT broker with websocket and tcp support (Written in golang) 
 * Easy sensor data storage 
 * APIs for IoT Device management and storage 
 * Most of the IoT logics will be handled by inbuilt golang application. It will then communicate with the django using channels
+* and more coming soon 
 
 ## Installation
 
@@ -26,7 +28,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-
+Now Connect to mqtt broker on localhost
 MQTT Port : 1883 
 Websocket Port : 1882 
 Stat Port: 8080 
