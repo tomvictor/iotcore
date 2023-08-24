@@ -5,9 +5,17 @@ from setuptools import (
 )
 
 
-GO_BINARY = "goiotbackend"
+BINARY = "goiotbackend"
 VERSION = "0.0.6"
 
+
+GO_BINARY = [
+    f"{BINARY}-mac-{VERSION}",
+    f"{BINARY}-win-{VERSION}.exe",
+    f"{BINARY}-linux-{VERSION}",
+]
+
+print(GO_BINARY)
 
 extras_require = {
     "test": [
@@ -52,7 +60,7 @@ setup(
         exclude=["tests", "docs", "tests.*", "licenses", "requirements"]
     ),
     include_package_data=True,
-    package_data={"": [GO_BINARY]},
+    package_data={"": GO_BINARY},
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
