@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -13,6 +14,11 @@ import (
 
 func RunMqtt() {
 
+	tcpAddr := flag.String("tcp", ":1883", "network address for TCP listener")
+	wsAddr := flag.String("ws", ":1882", "network address for Websocket listener")
+	infoAddr := flag.String("info", ":8080", "network address for web info dashboard listener")
+	flag.Parse()
+
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -24,8 +30,20 @@ func RunMqtt() {
 	server := mqtt.New(nil)
 	_ = server.AddHook(new(auth.AllowHook), nil)
 
-	ws := listeners.NewWebsocket("ws1", ":1882", nil)
-	err := server.AddListener(ws)
+	tcp := listeners.NewTCP("t1", *tcpAddr, nil)
+	err := server.AddListener(tcp)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ws := listeners.NewWebsocket("ws1", *wsAddr, nil)
+	err = server.AddListener(ws)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stats := listeners.NewHTTPStats("stats", *infoAddr, nil, server.Info)
+	err = server.AddListener(stats)
 	if err != nil {
 		log.Fatal(err)
 	}

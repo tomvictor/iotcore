@@ -1,17 +1,56 @@
 //go:build mage
+// +build mage
 
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+
 	"github.com/magefile/mage/sh"
 )
 
 const GoBinaryName = "goiotbackend"
 
-func packageName() string {
+type Project struct {
+	Version       string `json:"version"`
+	GoBinaryName  string `json:"gobinary"`
+	PyPackageName string `json:"pypackage"`
+}
+
+func (p *Project) Dist() string {
+	return fmt.Sprintf("dist/%s-%s.tar.gz", p.PyPackageName, p.Version)
+}
+
+func (p *Project) GoBinary() string {
 	//TODO: suffix platform
-	return GoBinaryName
+	return p.GoBinaryName
+}
+
+var ProjectConf *Project
+
+func Config() *Project {
+
+	if ProjectConf != nil {
+		return ProjectConf
+	}
+
+	jsonData, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatalf("Error reading Json file: %v", err)
+	}
+
+	err = json.Unmarshal(jsonData, &ProjectConf)
+	if err != nil {
+		log.Fatalf("Error parsing YAML: %v", err)
+	}
+
+	fmt.Println("pypackage:", ProjectConf.PyPackageName)
+	fmt.Println("version:", ProjectConf.Version)
+	fmt.Println("gobinary:", ProjectConf.GoBinaryName)
+	return ProjectConf
 }
 
 // Bootstrap project
@@ -19,15 +58,21 @@ func Bootstrap() {
 	fmt.Println("Bootstrapping...")
 }
 
+func Settings() {
+	Config()
+}
+
 func BuildGo() error {
 
 	sh.RunV("pwd")
 
-	if err := sh.RunV("go", "build", "-o", packageName()); err != nil {
+	c := Config()
+
+	if err := sh.RunV("go", "build", "-o", c.GoBinary()); err != nil {
 		return err
 	}
 
-	if err := sh.RunV("mv", packageName(), "djangoiot"); err != nil {
+	if err := sh.RunV("mv", c.GoBinary(), c.PyPackageName); err != nil {
 		return err
 	}
 
@@ -45,7 +90,7 @@ func Build() error {
 
 	BuildGo()
 
-	if err := sh.Run("python3", "-m", "build"); err != nil {
+	if err := sh.RunV("python3", "-m", "build"); err != nil {
 		return err
 	}
 
@@ -62,7 +107,7 @@ func Dev() error {
 	fmt.Println("Install package!")
 
 	// TODO: read version from file
-	if err := sh.Run("pip", "install", "dist/dev-0.0.4.tar.gz"); err != nil {
+	if err := sh.Run("pip", "install", Config().Dist()); err != nil {
 		return err
 	}
 
@@ -94,7 +139,7 @@ func Clean() error {
 		return err
 	}
 
-	if err := sh.Run("rm", "-rf", "dev.egg-info"); err != nil {
+	if err := sh.Run("rm", "-rf", "djangoiot.egg-info"); err != nil {
 		return err
 	}
 
