@@ -120,7 +120,7 @@ func Dev() error {
 
 // Run development django project
 func Run() error {
-	return sh.RunV("python", "develop/manage.py", "runserver")
+	return sh.RunV("python", "example/manage.py", "runserver")
 }
 
 // Clean the builds
