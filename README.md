@@ -1,4 +1,4 @@
-# djangoiot - Add MQTT and IoT capabilities to Django Rest Framework.
+# djangoiot - MQTT and IoT capabilities to Django Rest Framework.
 
 
 Project under development. Apis can change often until stable.
