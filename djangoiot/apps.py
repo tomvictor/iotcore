@@ -5,7 +5,7 @@ import psutil
 import platform
 
 BINARY = "goiotbackend"
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 BINARY_MAP = {
     "Darwin": f"{BINARY}-mac-{VERSION}",

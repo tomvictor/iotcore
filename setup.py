@@ -6,7 +6,7 @@ from setuptools import (
 
 
 BINARY = "goiotbackend"
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 
 GO_BINARY = [
