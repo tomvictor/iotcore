@@ -17,6 +17,21 @@ Planned Features
 - Most of the IoT logics will be handled by inbuilt golang application and it will then communicate with the django using channels
 
 
+Installation
+------------
+
+PyPI::
+
+    pip install djangoiot
+
+
+Then add djangoiot to the django apps
+
+
+MQTT Port : 1883
+Websocket Port : 1882
+Stat Port: 8080
+
 Development
 -----------
 

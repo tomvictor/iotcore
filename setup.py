@@ -4,7 +4,10 @@ from setuptools import (
     find_packages,
 )
 
+
 GO_BINARY = "goiotbackend"
+VERSION = "0.0.6"
+
 
 extras_require = {
     "test": [
@@ -29,16 +32,19 @@ extras_require["dev"] = (
 
 master_doc = "index"
 setup(
-    name="dev",
-    version="0.0.4",
+    name="djangoiot",
+    version=VERSION,
     url="https://github.com/tomvictor/djangoiot",
     license="MIT",
     description="Enable IoT in you django app",
-    long_description=open("README.rst", "r", encoding="utf-8").read(),
+    # long_description=open("README.rst", "r", encoding="utf-8").read(),
+    long_description="add djangoiot to your djangoapps. check docs at https://github.com/tomvictor/djangoiot for more details",
     author="Tom Victor",
     author_email="vjtomvictor@gmail.com",
     install_requires=[
         "django",
+        "psutil",
+        "channels[daphne]"
     ],
     python_requires=">=3.6",
     extras_require=extras_require,
