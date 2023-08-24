@@ -3,14 +3,14 @@
 
 Project under development. Apis can change often until stable.
 
-# Planned Features
+## Planned Features
 
 * MQTT based IoT protocol 
 * Easy sensor data storage 
 * APIs for IoT Device management and storage 
 * Most of the IoT logics will be handled by inbuilt golang application. It will then communicate with the django using channels
 
-# Installation
+## Installation
 
 PyPI
 ```
@@ -27,12 +27,11 @@ INSTALLED_APPS = [
 ```
 
 
-
 MQTT Port : 1883 
 Websocket Port : 1882 
 Stat Port: 8080 
 
-# Development
+## Development
 
 Use mage for development
 
@@ -48,18 +47,15 @@ Targets:
 
 
 
-Contribute
-----------
+## Contribute
 
 - Issue Tracker: github.com/tomvictor/djangoiot/issues
 - Source Code: github.com/tomvictor/djangoiot
 
-Support
--------
+## Support
 
 If you are having issues, please let raise issue on github.
 
-License
--------
+## License
 
 The project is licensed under the MIT license.
