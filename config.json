@@ -1,5 +1,5 @@
 {
-    "pypackage": "djangoiot",
+    "pypackage": "iotcore",
     "version": "0.0.7",
     "gobinary": "goiotbackend"
 }
