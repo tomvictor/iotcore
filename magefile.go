@@ -117,7 +117,7 @@ func Build() error {
 
 	BuildGo()
 
-	versionFileContent := fmt.Sprintf("__version__ = '%s'\n", Config().Version)
+	versionFileContent := fmt.Sprintf("version = '%s'\n", Config().Version)
 
 	file, err := os.OpenFile("iotcore/__version__.py", os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
