@@ -4,7 +4,7 @@ import subprocess
 
 import psutil
 
-from djangoiot import __version__
+from .__version__ import version
 
 
 class IotCore(object):
@@ -28,14 +28,21 @@ class IotCore(object):
             print("Starting Go process...")
             subprocess.Popen([self.executable_path()])
 
+    def clean(self):
+        # TODO: Clean the proces
+        raise NotImplementedError("clean function is not implemented")
+
+
+
+
     def executable_path(self):
         current_file_path = os.path.abspath(__file__)
         return os.path.join(os.path.dirname(current_file_path), self.executable)
 
     def get_executable_name(self):
         binary_map = {
-            "Darwin": f"{self.binary_prefix}-mac-{__version__}",
-            "Windows": f"{self.binary_prefix}-win-{__version__}.exe",
-            "Linux": f"{self.binary_prefix}-linux-{__version__}",
+            "Darwin": f"{self.binary_prefix}-mac-{version}",
+            "Windows": f"{self.binary_prefix}-win-{version}.exe",
+            "Linux": f"{self.binary_prefix}-linux-{version}",
         }
         return binary_map[platform.system()]

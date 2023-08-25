@@ -6,7 +6,7 @@ from setuptools import (
 import re
 
 with open('iotcore/__version__.py', 'rb') as f:
-    VERSION = str(eval(re.search(r'__version__\s+=\s+(.*)',
+    VERSION = str(eval(re.search(r'version\s+=\s+(.*)',
                                  f.read().decode('utf-8')).group(1)))
 
 BINARY = "goiotbackend"
@@ -51,9 +51,7 @@ setup(
     author="Tom Victor",
     author_email="vjtomvictor@gmail.com",
     install_requires=[
-        "django",
         "psutil",
-        "channels[daphne]"
     ],
     python_requires=">=3.6",
     extras_require=extras_require,
