@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/magefile/mage/sh"
 )
@@ -51,7 +52,6 @@ func Config() *Project {
 	if err != nil {
 		log.Fatalf("Error reading Json file: %v", err)
 	}
-
 	err = json.Unmarshal(jsonData, &ProjectConf)
 	if err != nil {
 		log.Fatalf("Error parsing YAML: %v", err)
@@ -108,7 +108,7 @@ func BuildGo() error {
 	return nil
 }
 
-// Build djangoiot
+// Build
 func Build() error {
 	if err := Clean(); err != nil {
 		return err
@@ -116,6 +116,21 @@ func Build() error {
 	fmt.Println("Building...")
 
 	BuildGo()
+
+	versionFileContent := fmt.Sprintf("__version__ = '%s'\n", Config().Version)
+
+	file, err := os.OpenFile("iotcore/__version__.py", os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		fmt.Println("Error opening the file:", err)
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(versionFileContent)
+	if err != nil {
+		fmt.Println("Error writing to the file:", err)
+		return err
+	}
 
 	if err := sh.RunV("python3", "-m", "build"); err != nil {
 		return err
@@ -147,7 +162,7 @@ func Dev() error {
 
 // Run development django project
 func Run() error {
-	return sh.RunV("python", "example/manage.py", "runserver")
+	return sh.RunV("python", "examples/django/manage.py", "runserver")
 }
 
 // Clean the builds
@@ -162,11 +177,11 @@ func Clean() error {
 		return err
 	}
 
-	if err := sh.Run("rm", "-rf", "djangoiot.egg-info"); err != nil {
+	if err := sh.Run("rm", "-rf", "iotcore.egg-info"); err != nil {
 		return err
 	}
 
-	if err := sh.Run("rm", "-rf", "djangoiot.egg-info"); err != nil {
+	if err := sh.Run("rm", "-rf", "iotcore.egg-info"); err != nil {
 		return err
 	}
 

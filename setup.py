@@ -3,19 +3,19 @@ from setuptools import (
     setup,
     find_packages,
 )
+import re
 
+with open('iotcore/__version__.py', 'rb') as f:
+    VERSION = str(eval(re.search(r'__version__\s+=\s+(.*)',
+                                 f.read().decode('utf-8')).group(1)))
 
 BINARY = "goiotbackend"
-VERSION = "0.0.7"
-
 
 GO_BINARY = [
     f"{BINARY}-mac-{VERSION}",
     f"{BINARY}-win-{VERSION}.exe",
     f"{BINARY}-linux-{VERSION}",
 ]
-
-print(GO_BINARY)
 
 extras_require = {
     "test": [
@@ -26,27 +26,28 @@ extras_require = {
         "pytest",
         "tox",
     ],
-    "lint": ["flake8", "pep8", "isort",],
-    "doc": ["Sphinx>=1.6.5,<2", "sphinx_rtd_theme>=0.1.9",],
-    "dev": ["bumpversion>=0.5.3,<1", "pytest-watch", "wheel", "twine", "ipython",],
+    "lint": ["flake8", "pep8", "isort", ],
+    "doc": ["Sphinx>=1.6.5,<2", "sphinx_rtd_theme>=0.1.9", ],
+    "dev": ["bumpversion>=0.5.3,<1", "pytest-watch", "wheel", "twine", "ipython", ],
 }
 
 extras_require["dev"] = (
-    extras_require["dev"]
-    + extras_require["test"]  # noqa: W504
-    + extras_require["lint"]  # noqa: W504
-    + extras_require["doc"]  # noqa: W504  # noqa: W504
+        extras_require["dev"]
+        + extras_require["test"]  # noqa: W504
+        + extras_require["lint"]  # noqa: W504
+        + extras_require["doc"]  # noqa: W504  # noqa: W504
 )
 
 master_doc = "index"
 setup(
-    name="djangoiot",
+    name="iotcore",
     version=VERSION,
-    url="https://github.com/tomvictor/djangoiot",
+    url="https://github.com/tomvictor/iotcore",
     license="MIT",
     description="Enable IoT in you django app",
     # long_description=open("README.rst", "r", encoding="utf-8").read(),
-    long_description="add djangoiot to your djangoapps. check docs at https://github.com/tomvictor/djangoiot for more details",
+    long_description="add iotcore to your django apps. check docs at https://github.com/tomvictor/iotcore for more "
+                     "details",
     author="Tom Victor",
     author_email="vjtomvictor@gmail.com",
     install_requires=[
@@ -70,7 +71,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
