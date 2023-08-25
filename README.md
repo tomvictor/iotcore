@@ -16,10 +16,10 @@ Project under development. Apis can change often until stable.
 
 PyPI
 ```
-pip install djangoiot
+pip install iotcore
 ```
 
-Then add djangoiot to the django apps as below in the settings.py file of your project
+Then add iotcore to the django apps as below in the settings.py file of your project
 ```python
 INSTALLED_APPS = [
     "Other Apps here",
@@ -66,7 +66,7 @@ Use mage for development
 mage
 Targets:
   bootstrap    project
-  build        djangoiot      
+  build        iotcore      
   clean        the builds
   dev          Clean, Build and Install dev version
   run          development django project
@@ -76,8 +76,8 @@ Targets:
 
 ## Contribute
 
-- Issue Tracker: github.com/tomvictor/djangoiot/issues
-- Source Code: github.com/tomvictor/djangoiot
+- Issue Tracker: github.com/tomvictor/iotcore/issues
+- Source Code: github.com/tomvictor/iotcore
 
 ## Support
 
