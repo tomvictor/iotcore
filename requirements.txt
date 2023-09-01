@@ -1,5 +1,1 @@
-Django~=4.2.4
-setuptools~=68.0.0
-psutil~=5.9.5
-fastapi~=0.102.0
-"uvicorn[standard]"
+maturin==0.14.15

@@ -1,7 +1,6 @@
 from django.apps import AppConfig
-from iotcore.core import IotCore
-
-iot_core = IotCore()
+from iotcore import start_mqtt_server
+import os
 
 
 class IotConfig(AppConfig):
@@ -9,4 +8,10 @@ class IotConfig(AppConfig):
     name = "iotcore.djangoiot"
 
     def ready(self):
-        iot_core.run()
+        server_status = os.environ.get("MQTT_SERVER_RUNNING", None)
+        if server_status is None:
+            print("Starting MQTT server!")
+            os.environ["MQTT_SERVER_RUNNING"] = "true"
+            start_mqtt_server()
+        else:
+            print("Server already running!")

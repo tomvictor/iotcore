@@ -1,0 +1,20 @@
+[package]
+name = "iotcore"
+version = "0.0.9"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "iotcore"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.19.2"
+rumqttc = "0.22.0"
+rumqttd = "0.17.0"
+config = "0.13"
+
+[package.metadata.maturin]
+name = "iotcore._iotcore"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+rumqttc = "0.20.0"
