@@ -1,110 +1,72 @@
-# Django #
-*.log
-*.pot
-*.pyc
-__pycache__
-db.sqlite3
-media
+/target
 
-# Backup files #
-*.bak
-
-# If you are using PyCharm #
-.idea/
-*.iws /out/
-
-# Python #
+# Byte-compiled / optimized / DLL files
+__pycache__/
+.pytest_cache/
 *.py[cod]
-*$py.class
 
-build
+# C extensions
+*.so
+
 # Distribution / packaging
-.Python build/
+.Python
+.venv/
+env/
+bin/
+build/
 develop-eggs/
 dist/
-downloads/
 eggs/
-.eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
-wheels/
+include/
+man/
+venv/
 *.egg-info/
 .installed.cfg
 *.egg
-*.manifest
-*.spec
 
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+pip-selfcheck.json
 
 # Unit test / coverage reports
 htmlcov/
 .tox/
 .coverage
-.coverage.*
 .cache
-.pytest_cache/
 nosetests.xml
 coverage.xml
-*.cover
-.hypothesis/
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Translations
+*.mo
 
-# pyenv
-.python-version
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
 
-# celery
-celerybeat-schedule.*
+# Rope
+.ropeproject
 
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# Sublime Text #
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
-
-# sftp configuration file
-sftp-config.json
-
-# Package control specific files Package
-Control.last-run
-Control.ca-list
-Control.ca-bundle
-Control.system-ca-bundle
-GitHub.sublime-settings
-
-# Visual Studio Code #
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history
-
+# Django stuff:
+*.log
+*.pot
 
 .DS_Store
-goiotbackend-*
+
+# Sphinx documentation
+docs/_build/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Pyenv
+.python-version
