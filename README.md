@@ -11,7 +11,7 @@ Rust using popular Tokio framework. Motive of the project is to avoid the GIL li
 * Zero extra setup required to run mqtt broker in you Django and Fastapi project
 * and more
 
-## Planned Features
+## Features
 
 * Device support
 * Sensor support
