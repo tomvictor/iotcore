@@ -1,4 +1,4 @@
-# Iotcore - Python MQTT Broker and IoT Features for Django and FastAPI.
+# Iotcore - Python MQTT Broker and IoT Features for Django and FastAPI
 
 The project aims to give full support for mqtt broker and related apis. The internals of the mqtt server is  written in  
 Rust using popular Tokio framework. Motive of the project is to avoid the GIL limitation of python and bring all the  fun features offered by rust.
@@ -22,15 +22,15 @@ Rust using popular Tokio framework. Motive of the project is to avoid the GIL li
 
 ## Installation
 
-PyPI
 ```
 pip install iotcore
 ```
 
-Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from https://github.com/tomvictor/iotcore  
+Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from
+https://github.com/tomvictor/iotcore    
 
 
-# FastAPI setup
+## FastAPI setup
 
 ```python
 from fastapi import FastAPI
@@ -54,7 +54,7 @@ def read_root():
 ```
 
 
-# Django Setup
+## Django Setup
 
 Then add iotcore to the django apps as below in the settings.py file of your project
 ```python
@@ -67,17 +67,31 @@ INSTALLED_APPS = [
 Now Connect to mqtt broker on localhost  
 MQTT Port : 1883
 
-# Run Example project
+## Run Example project
+
+
+**Django**  
 
 ```shell
-pip install django
 pip install iotcore
+pip install django
 
 python examples/django/manage.py runserver
 ```
 
+**FastAPI**  
 
-For more details check the example folder
+```shell
+pip install iotcore
+pip install fastapi
+pip install uvicorn
+
+uvicorn examples.fastapi.main:app
+```
+
+Open you mqtt client and use below details to connect to the broker:  
+**_Host_**: **127.0.0.1** or  **localhost**  
+**_Port_**: **1883**  
 
 ## Contribute
 
