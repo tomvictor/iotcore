@@ -3,7 +3,7 @@
 The project aims to give full support for mqtt broker and related apis. The internals of the mqtt server is  written in  
 Rust using popular Tokio framework. Motive of the project is to avoid the GIL limitation of python and bring all the  fun features offered by rust.
 
-## Planned Features
+## Features
 
 * Full-fledged configurable Tokio based MQTT server
 * No python GIL limitation
@@ -11,7 +11,7 @@ Rust using popular Tokio framework. Motive of the project is to avoid the GIL li
 * Zero extra setup required to run mqtt broker in you Django and Fastapi project
 * and more
 
-## Features
+## Planned Features
 
 * Device support
 * Sensor support
