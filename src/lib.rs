@@ -36,7 +36,7 @@ impl IotCore {
         println!("Rust: starting mqtt server...");
 
         let config = config::Config::builder()
-            .add_source(config::File::with_name("rumqttd.toml"))
+            .add_source(config::File::with_name("mqtt.toml"))
             .build()
             .unwrap();
 

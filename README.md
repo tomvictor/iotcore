@@ -1,15 +1,24 @@
-# Iotcore - MQTT and IoT capabilities to Django Rest Framework and FastAPI.
+# Iotcore - Python MQTT Broker and IoT Features for Django and FastAPI.
 
-The project aims to give full support for mqtt based server and related apis. The internals of the mqtt server is
-written in golang. The python will not directly interact with the golang instead communicate using grpc(planned). The 
-motive is to avoid the GIL limitation of python and bring all the  fun features offered by golang.
+The project aims to give full support for mqtt broker and related apis. The internals of the mqtt server is  written in  
+Rust using popular Tokio framework. Motive of the project is to avoid the GIL limitation of python and bring all the  fun features offered by rust.
 
 ## Planned Features
 
-* Full fledged MQTT server
-* with websocket and tcp support (Written in golang)
-* MQTT v5 support
-* and more coming soon
+* Full-fledged configurable Tokio based MQTT server
+* No python GIL limitation
+* All Standard MQTT broker features
+* Zero extra setup required to run mqtt broker in you Django and Fastapi project
+* and more
+
+## Planned Features
+
+* Device support
+* Sensor support
+* Sensor data storage
+* Django based admin pages
+* Django rest framework based APIs for managing devices and sensors
+* SSL certificates and policy management
 
 ## Installation
 
@@ -18,19 +27,20 @@ PyPI
 pip install iotcore
 ```
 
+Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from https://github.com/tomvictor/iotcore  
+
+
 # FastAPI setup
 
 ```python
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from iotcore import IotCore
-
-iot_core = IotCore()
+from iotcore import start_mqtt_server
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    iot_core.run()
+    start_mqtt_server()
     yield
 
 
@@ -43,24 +53,6 @@ def read_root():
 
 ```
 
-Output
-
-```shell
-❯ cd examples/fastapi
-❯ uvicorn main:app
-INFO:     Started server process [62593]
-INFO:     Waiting for application startup.
-Starting Go process...
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-11:21PM INF added hook hook=allow-all-auth
-11:21PM INF attached listener address=:1883 id=t1 protocol=tcp
-11:21PM INF attached listener address=:1882 id=ws1 protocol=ws
-11:21PM INF attached listener address=:8080 id=stats protocol=http
-11:21PM INF mochi mqtt starting version=2.3.0
-11:21PM INF mochi mqtt server started
-
-```
 
 # Django Setup
 
@@ -73,52 +65,19 @@ INSTALLED_APPS = [
 ```
 
 Now Connect to mqtt broker on localhost  
-MQTT Port : 1883  
-Websocket Port : 1882  
-Stat Port: 8080  
+MQTT Port : 1883
 
 # Run Example project
 
 ```shell
-pip install -r requirements.txt
-python examples/manage.py runserver
+pip install django
+pip install iotcore
+
+python examples/django/manage.py runserver
 ```
-Output
 
-```shell
-System check identified no issues (0 silenced).
-August 25, 2023 - 07:14:33
-Django version 4.2.4, using settings 'develop.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-
-Starting golang
-7:14AM INF added hook hook=allow-all-auth
-7:14AM INF attached listener address=:1883 id=t1 protocol=tcp
-7:14AM INF attached listener address=:1882 id=ws1 protocol=ws
-7:14AM INF attached listener address=:8080 id=stats protocol=http
-7:14AM INF mochi mqtt starting version=2.3.0
-7:14AM INF mochi mqtt server started
-
-```
 
 For more details check the example folder
-
-## Development
-
-Use mage for development
-
-```shell
-mage
-Targets:
-  bootstrap    project
-  build        iotcore      
-  clean        the builds
-  dev          Clean, Build and Install dev version
-  run          development django project
-```
-
-
 
 ## Contribute
 
@@ -127,7 +86,7 @@ Targets:
 
 ## Support
 
-If you are having issues, please let raise issue on github.
+Star the project on GitHub :)
 
 ## License
 
