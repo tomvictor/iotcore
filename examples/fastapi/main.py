@@ -1,13 +1,11 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from iotcore import IotCore
-
-iot_core = IotCore()
+from iotcore import start_mqtt_server
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    iot_core.run()
+    start_mqtt_server()
     yield
 
 
