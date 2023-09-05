@@ -2,6 +2,7 @@ use std::net::TcpListener;
 use pyo3::prelude::*;
 use rumqttc::{Client,Connection, MqttOptions, QoS, Event, Incoming};
 use std::thread;
+use std::time::Duration;
 use rumqttd::{Broker,Config};
 
 #[pyclass]
@@ -49,19 +50,15 @@ impl IotCore {
             broker.start().unwrap()
         });
 
+        self.begin_subscription().expect("Failed to begin subscription");
+
         Ok(())
     }
 
     fn is_port_available(&mut self, port: u16) -> bool {
         match TcpListener::bind(("127.0.0.1", port)) {
-            Ok(_) => {
-                // Binding was successful, so the port is available.
-                true
-            }
-            Err(_) => {
-                // Binding failed, indicating the port is already in use.
-                false
-            }
+            Ok(_) => { true }
+            Err(_) => { false }
         }
     }
 
@@ -74,8 +71,34 @@ impl IotCore {
         Ok(())
     }
 
+    fn begin_subscription(&mut self) -> PyResult<()>{
+        thread::spawn(move || {
+            // Wait for the Mqtt server to start
+            thread::sleep(Duration::from_secs(2));
+            let mqttoptions = MqttOptions::new("iotcore_sub", "127.0.0.1", 1883);
+            let (client, mut connection) = Client::new(mqttoptions, 10);
 
-    fn run(&mut self) -> PyResult<()>{
+            for notification in connection.iter() {
+                match notification {
+                    Ok(Event::Incoming(Incoming::Publish(publish))) => {
+                        println!("Rust > {:?}: {:?}", publish.topic,publish.payload);
+                        // let resp = format!("{:?}",publish.payload);
+                    }
+                    Err(e)=>{
+                        println!("Error = {:?}", e);
+                    }
+                    others => {
+                        println!("{:?}", others)
+                    }
+                }
+            }
+        });
+
+        Ok(())
+    }
+
+
+    fn run(&mut self) -> PyResult<()> {
         Python::with_gil(|py| {
             for notification in self.connection.iter() {
                 match notification {
