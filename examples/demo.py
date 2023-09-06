@@ -1,6 +1,4 @@
 from iotcore import IotCore
-
-
 def main():
     iot = IotCore()
     iot.start_broker()
