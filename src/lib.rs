@@ -4,6 +4,14 @@ use rumqttc::{Client,Connection, MqttOptions, QoS, Event, Incoming};
 use std::thread;
 use std::time::Duration;
 use rumqttd::{Broker,Config};
+use std::sync::mpsc;
+
+use bytes::{Bytes};
+
+struct Msg {
+    topic: String,
+    data: Bytes,
+}
 
 #[pyclass]
 struct IotCore {
@@ -21,11 +29,6 @@ impl IotCore {
         Self { client,connection,callback }
     }
 
-    fn log(&self, message: &str) -> PyResult<String> {
-        println!("{}", message);
-        Ok(message.to_string())
-    }
-
     fn subscribe(&mut self, topic: &str) -> PyResult<()> {
         let topic = topic.to_owned();
         self.client
@@ -33,7 +36,8 @@ impl IotCore {
             .unwrap();
         Ok(())
     }
-    fn start_mqtt_server(&mut self) -> PyResult<()> {
+
+    fn initialize_broker(&mut self) -> PyResult<()> {
         println!("Rust: starting mqtt server...");
 
         let config = config::Config::builder()
@@ -50,7 +54,7 @@ impl IotCore {
             broker.start().unwrap()
         });
 
-        self.begin_subscription().expect("Failed to begin subscription");
+        // self.begin_subscription().expect("Failed to begin subscription");
 
         Ok(())
     }
@@ -72,17 +76,31 @@ impl IotCore {
     }
 
     fn begin_subscription(&mut self) -> PyResult<()>{
+
+        thread::sleep(Duration::from_secs(3));
+
+        let (tx, rx) = mpsc::channel();
+
         thread::spawn(move || {
             // Wait for the Mqtt server to start
             thread::sleep(Duration::from_secs(2));
             let mqttoptions = MqttOptions::new("iotcore_sub", "127.0.0.1", 1883);
-            let (client, mut connection) = Client::new(mqttoptions, 10);
+            let (mut client, mut connection) = Client::new(mqttoptions, 10);
+
+            client
+                .subscribe("#", QoS::AtLeastOnce)
+                .unwrap();
 
             for notification in connection.iter() {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("Rust > {:?}: {:?}", publish.topic,publish.payload);
-                        // let resp = format!("{:?}",publish.payload);
+                        println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
+                        let resp = format!("{:?}",publish.payload);
+                        let data = Msg{
+                            topic:publish.topic,
+                            data: publish.payload
+                        };
+                        tx.send(data).expect("Failed to send payload via channels");
                     }
                     Err(e)=>{
                         println!("Error = {:?}", e);
@@ -94,26 +112,17 @@ impl IotCore {
             }
         });
 
-        Ok(())
-    }
+        let ref_python_callback = self.callback.clone();
 
-
-    fn run(&mut self) -> PyResult<()> {
-        Python::with_gil(|py| {
-            for notification in self.connection.iter() {
-                match notification {
-                    Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        // println!("Rust > {:?}: {:?}", publish.topic,publish.payload);
-                        let resp = format!("{:?}",publish.payload);
-                        self.callback.call1(py, (resp, )).expect("TODO: panic message");
-                    }
-                    Err(e)=>{
-                        println!("Error = {:?}", e);
-                    }
-                    others => {
-                        println!("{:?}", others)
-                    }
-                }
+        thread::spawn(move || {
+            for received in rx {
+                println!("Channel rx loop");
+                Python::with_gil(|py| {
+                    let byte_array:Vec<u8> = received.data.to_vec();
+                    ref_python_callback.call1(py, (received.topic, byte_array, )).expect(
+                        "Failed to call the python callback"
+                    );
+                });
             }
         });
 

@@ -13,6 +13,7 @@ pyo3 = "0.19.2"
 rumqttc = "0.22.0"
 rumqttd = "0.17.0"
 config = "0.13"
+bytes = "1"
 
 [package.metadata.maturin]
 name = "iotcore._iotcore"
