@@ -54,6 +54,8 @@ impl IotCore {
             broker.start().unwrap()
         });
 
+        // TODO: Add bool logic
+
         // self.begin_subscription().expect("Failed to begin subscription");
 
         Ok(())
