@@ -5,10 +5,11 @@ Rust using popular Tokio framework. Motive of the project is to avoid the GIL li
 
 ## Features
 
-* Full-fledged configurable Tokio based MQTT server
+* Full-fledged configurable Tokio based MQTT broker
 * No python GIL limitation
 * All Standard MQTT broker features
 * Zero extra setup required to run mqtt broker in you Django and Fastapi project
+* MQTT client, with callback support for async or non-blocking applications
 * and more
 
 ## Planned Features
@@ -32,15 +33,38 @@ https://github.com/tomvictor/iotcore
 
 ## FastAPI setup
 
+**Broker only**  
+
+```python
+from fastapi import FastAPI
+from iotcore.fastapi import iotcore_broker
+
+app = FastAPI(lifespan=iotcore_broker)
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+```
+
+**Broker plus Mqtt client**
+
 ```python
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from iotcore import start_mqtt_server
+from iotcore import IotCore
 
+
+def mqtt_callback(data):
+    print(f"iot >: {data}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    start_mqtt_server()
+    iot = IotCore()
+    iot.start_broker()
+    iot.background_loop_forever()
+    iot.subscribe("iot", mqtt_callback)
     yield
 
 
@@ -50,6 +74,7 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
 
 ```
 

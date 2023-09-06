@@ -4,15 +4,7 @@ from iotcore import IotCore
 
 
 def mqtt_callback(data):
-    print(f"Python >: {data}")
-
-#
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     core = IotCore("", 1883, mqtt_callback)
-#     core.initialize_broker()
-#     core.begin_subscription()
-#     yield
+    print(f"iot >: {data}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

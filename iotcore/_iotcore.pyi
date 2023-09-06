@@ -42,3 +42,4 @@ class _IotCore:
         :return: None
         """
         ...
+
