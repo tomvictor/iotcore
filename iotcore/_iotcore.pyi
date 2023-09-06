@@ -1,10 +1,9 @@
-
-
-class IotCore:
+class _IotCore:
     """
     IotCore main class
     """
-    def __init__(self,server, port, callback)->IotCore:
+
+    def __init__(self, server, port, callback) -> _IotCore:
         """
         Init function
         :param server: server host
@@ -13,7 +12,7 @@ class IotCore:
         """
         ...
 
-    def publish(self,topic:str,data:str):
+    def publish(self, topic: str, data: str):
         """
         Publish date over mqtt
         :param topic: topic
@@ -22,7 +21,7 @@ class IotCore:
         """
         ...
 
-    def subscribe(self,topic):
+    def subscribe(self, topic):
         """
         subscribe to mqtt topic
         :param topic:
@@ -30,14 +29,14 @@ class IotCore:
         """
         ...
 
-    def run(self):
+    def initialize_broker(self):
         """
-        Run mqtt client
+        Run mqtt broker
         :return: None
         """
         ...
 
-    def start_mqtt_server(self):
+    def begin_subscription(self):
         """
         Run mqtt broker
         :return: None
