@@ -14,14 +14,14 @@ struct Msg {
 }
 
 #[pyclass]
-struct IotCore {
+struct _IotCore {
     client: Client,
     connection: Connection,
     callback:PyObject,
 }
 
 #[pymethods]
-impl IotCore {
+impl _IotCore {
     #[new]
     fn new(host: &str, port: u16, callback: PyObject,) -> Self {
         let mqttoptions = MqttOptions::new("iotcore", host, port);
@@ -134,6 +134,6 @@ impl IotCore {
 
 #[pymodule]
 fn _iotcore(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_class::<IotCore>()?;
+    m.add_class::<_IotCore>()?;
     Ok(())
 }

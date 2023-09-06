@@ -1,2 +1,1 @@
-from iotcore._iotcore import IotCore
-from iotcore.mqtt import MqttBroker, Mqtt
+from iotcore.mqtt import MqttBroker, IotCore

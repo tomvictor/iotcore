@@ -1,4 +1,4 @@
-from iotcore._iotcore import IotCore
+from iotcore._iotcore import _IotCore
 
 
 class MqttBroker(object):
@@ -7,7 +7,7 @@ class MqttBroker(object):
     """
 
     def __init__(self):
-        self._core = IotCore("", 1883, self.iot_core_callback)
+        self._core = _IotCore("", 1883, self.iot_core_callback)
 
     def start_broker(self) -> None:
         self._core.initialize_broker()
@@ -26,13 +26,13 @@ class Subscription(object):
         return hash(self.topic)
 
 
-class Mqtt(object):
+class IotCore(object):
     """Create a new MQTT object
 
     """
 
     def __init__(self):
-        self._core = IotCore("", 1883, self.iot_core_callback)
+        self._core = _IotCore("", 1883, self.iot_core_callback)
         self.subscribed_topics = dict()
 
     def start_broker(self) -> None:
