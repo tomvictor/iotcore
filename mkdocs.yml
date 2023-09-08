@@ -1,0 +1,72 @@
+site_name: Iotcore
+site_description: Iotcore
+site_url: https://tomvictor.github.io/iotcore
+repo_name: github.com/tomvictor/iotcore
+repo_url: https://github.com/tomvictor/iotcore
+edit_uri: 'https://github.com/tomvictor/iotcore'
+
+nav:
+  - Getting Started: index.md
+#  - Developer Guide: development.md
+
+
+theme:
+  name: material
+  features:
+    # - navigation.tabs
+    - navigation.tracking
+    - navigation.sections
+    # - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: en
+  icon:
+  repo: fontawesome/brands/github
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+      primary: teal
+      accent: purple
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+      primary: teal
+      accent: lime
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/tomvictor
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/vjtomvictor
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/vjtomvictor/
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+copyright: |
+  &copy; 2023 <a href="https://github.com/tomvictor"  target="_blank" rel="noopener">Tom Victor</a>
