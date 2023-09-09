@@ -46,6 +46,9 @@ class IotCore(object):
         self.subscribed_topics[subscription.hash] = subscription
         self._core.subscribe(topic)
 
+    def publish(self, topic, data):
+        self._core.publish(topic, data)
+
     def iot_core_callback(self, topic, data):
         try:
             subscription = self.subscribed_topics[hash(topic)]

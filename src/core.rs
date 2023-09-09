@@ -5,9 +5,10 @@ use std::thread;
 use std::time::Duration;
 use rumqttd::{Broker, Config};
 use std::sync::mpsc;
-
-
+use std::str;
 use bytes::{Bytes};
+
+
 
 pub struct Msg {
     pub topic: String,
@@ -29,13 +30,12 @@ impl _IotCore {
         let (client, connection) = Client::new(mqttoptions, 10);
         Self { client, connection, callback }
     }
-
-    fn subscribe(&mut self, topic: &str) -> PyResult<()> {
-        let topic = topic.to_owned();
-        self.client
-            .subscribe(&topic, QoS::AtLeastOnce)
-            .unwrap();
-        Ok(())
+    fn re_connect_to_broker(&mut self) {
+        println!("Reconnecting client...");
+        let mqttoptions = MqttOptions::new("iotcore", "localhost", 1883);
+        let (client, connection) = Client::new(mqttoptions, 10);
+        self.client = client;
+        self.connection = connection;
     }
 
     fn initialize_broker(&mut self) -> PyResult<()> {
@@ -59,6 +59,9 @@ impl _IotCore {
 
         // self.begin_subscription().expect("Failed to begin subscription");
 
+        // TODO: use bool logic
+        self.re_connect_to_broker();
+
         Ok(())
     }
 
@@ -70,6 +73,7 @@ impl _IotCore {
     }
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {
+        println!("rust: publish");
         let topic = topic.to_owned();
         let data = data.to_owned();
         self.client
@@ -78,9 +82,16 @@ impl _IotCore {
         Ok(())
     }
 
-    fn begin_subscription(&mut self) -> PyResult<()> {
-        thread::sleep(Duration::from_secs(2));
+    fn subscribe(&mut self, topic: &str) -> PyResult<()> {
+        println!("rust: subscribe");
+        let topic_to_be_subscribed = topic.to_owned();
+        self.client
+            .publish("$subscribe", QoS::AtLeastOnce, false, topic_to_be_subscribed)
+            .unwrap();
+        Ok(())
+    }
 
+    fn begin_subscription(&mut self) -> PyResult<()> {
         let (tx, rx) = mpsc::channel();
 
         thread::spawn(move || {
@@ -96,13 +107,22 @@ impl _IotCore {
             for notification in connection.iter() {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
-                        let resp = format!("{:?}", publish.payload);
-                        let data = Msg {
-                            topic: publish.topic,
-                            data: publish.payload,
-                        };
-                        tx.send(data).expect("Failed to send payload via channels");
+                        println!("topic: {:?}", publish.topic );
+                        if publish.topic == "$subscribe" {
+                            let topic_buf = publish.payload.clone().to_vec();
+                            let topic_str = str::from_utf8(&topic_buf).unwrap();
+                            println!("subscribing to {:?}",topic_str);
+                            client.subscribe(topic_str,QoS::ExactlyOnce)
+                                .unwrap();
+                        }else {
+                            println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
+                            let resp = format!("{:?}", publish.payload);
+                            let data = Msg {
+                                topic: publish.topic,
+                                data: publish.payload,
+                            };
+                            tx.send(data).expect("Failed to send payload via channels");
+                        }
                     }
                     Err(e) => {
                         println!("Error = {:?}", e);
