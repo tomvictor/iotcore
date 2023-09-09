@@ -1,6 +1,6 @@
-site_name: Iotcore
+site_name: IoTCore
 site_description: Iotcore
-site_url: https://tomvictor.github.io/iotcore
+site_url: https://iotcore.buildfromzero.com/
 repo_name: github.com/tomvictor/iotcore
 repo_url: https://github.com/tomvictor/iotcore
 edit_uri: 'https://github.com/tomvictor/iotcore'
