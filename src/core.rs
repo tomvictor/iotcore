@@ -32,7 +32,7 @@ impl _IotCore {
     }
     fn re_connect_to_broker(&mut self) {
         println!("Reconnecting client...");
-        let mqttoptions = MqttOptions::new("iotcore", "localhost", 1883);
+        let mqttoptions = MqttOptions::new("iotcore", "127.0.0.1", 1883);
         let (client, connection) = Client::new(mqttoptions, 10);
         self.client = client;
         self.connection = connection;
@@ -73,11 +73,11 @@ impl _IotCore {
     }
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {
-        println!("rust: publish");
+        println!("rust: publish, {:?}", topic);
         let topic = topic.to_owned();
         let data = data.to_owned();
         self.client
-            .publish(&topic, QoS::AtLeastOnce, false, data)
+            .publish("iot", QoS::AtLeastOnce, false, data)
             .unwrap();
         Ok(())
     }
@@ -86,13 +86,32 @@ impl _IotCore {
         println!("rust: subscribe");
         let topic_to_be_subscribed = topic.to_owned();
         self.client
-            .publish("$subscribe", QoS::AtLeastOnce, false, topic_to_be_subscribed)
+            .publish("subscribe", QoS::AtLeastOnce, false, topic_to_be_subscribed)
             .unwrap();
         Ok(())
     }
 
     fn begin_subscription(&mut self) -> PyResult<()> {
         let (tx, rx) = mpsc::channel();
+
+        let new_self = self;
+
+        thread::spawn(move || {
+            for notification in self.connection.iter() {
+                match notification {
+                    Ok(Event::Incoming(Incoming::Publish(publish))) => {
+                        println!("topic: {:?}", publish.topic );
+                    }
+                    Err(e) => {
+                        println!("Error = {:?}", e);
+                    }
+                    others => {
+                        println!("{:?}", others)
+                    }
+                }
+            }
+
+        });
 
         thread::spawn(move || {
             // Wait for the Mqtt server to start
@@ -108,7 +127,7 @@ impl _IotCore {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
                         println!("topic: {:?}", publish.topic );
-                        if publish.topic == "$subscribe" {
+                        if publish.topic == "subscribe" {
                             let topic_buf = publish.payload.clone().to_vec();
                             let topic_str = str::from_utf8(&topic_buf).unwrap();
                             println!("subscribing to {:?}",topic_str);
