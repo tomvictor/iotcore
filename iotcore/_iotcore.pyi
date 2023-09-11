@@ -1,9 +1,9 @@
-class _IotCore:
+class IotCoreRs:
     """
     IotCore main class
     """
 
-    def __init__(self, server, port, callback) -> _IotCore:
+    def __init__(self, server, port, callback) -> IotCoreRs:
         """
         Init function
         :param server: server host

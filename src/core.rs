@@ -16,14 +16,14 @@ pub struct Msg {
 }
 
 #[pyclass]
-pub struct _IotCore {
+pub struct IotCoreRs {
     client: Client,
     connection: Connection,
     callback: PyObject,
 }
 
 #[pymethods]
-impl _IotCore {
+impl IotCoreRs {
     #[new]
     fn new(host: &str, port: u16, callback: PyObject) -> Self {
         let mqttoptions = MqttOptions::new("iotcore", host, port);
@@ -60,7 +60,7 @@ impl _IotCore {
         // self.begin_subscription().expect("Failed to begin subscription");
 
         // TODO: use bool logic
-        self.re_connect_to_broker();
+        // self.re_connect_to_broker();
 
         Ok(())
     }
@@ -93,25 +93,6 @@ impl _IotCore {
 
     fn begin_subscription(&mut self) -> PyResult<()> {
         let (tx, rx) = mpsc::channel();
-
-        let new_self = self;
-
-        thread::spawn(move || {
-            for notification in self.connection.iter() {
-                match notification {
-                    Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("topic: {:?}", publish.topic );
-                    }
-                    Err(e) => {
-                        println!("Error = {:?}", e);
-                    }
-                    others => {
-                        println!("{:?}", others)
-                    }
-                }
-            }
-
-        });
 
         thread::spawn(move || {
             // Wait for the Mqtt server to start
