@@ -46,3 +46,20 @@ class IotCoreRs:
     def re_connect_to_broker(self):
         pass
 
+class IotCoreBroker:
+    """
+    IotCoreBroker main class
+    """
+
+    def __init__(self, name) -> IotCoreBroker:
+        """
+        Init function
+        :param name: server name
+        """
+        ...
+
+    def run_forever(self) -> None:
+        """
+        Run Broker
+        """
+        ...

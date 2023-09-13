@@ -74,33 +74,6 @@ impl IotCoreRs {
 
     }
 
-    fn initialize_broker(&mut self) -> PyResult<()> {
-        println!("Rust: starting mqtt server...");
-
-        let config = config::Config::builder()
-            .add_source(config::File::with_name("mqtt.toml"))
-            .build()
-            .unwrap();
-
-        let config: Config = config.try_deserialize().unwrap();
-
-        dbg!(&config);
-        let mut broker = Broker::new(config);
-
-        thread::spawn(move || {
-            broker.start().unwrap()
-        });
-
-        // TODO: Add bool logic
-
-        // self.begin_subscription().expect("Failed to begin subscription");
-
-        // TODO: use bool logic
-        // self.re_connect_to_broker();
-
-        Ok(())
-    }
-
     fn is_port_available(&mut self, port: u16) -> bool {
         match TcpListener::bind(("127.0.0.1", port)) {
             Ok(_) => { true }

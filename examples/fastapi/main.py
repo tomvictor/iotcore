@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from iotcore import IotCore
+from iotcore import IotCore, IotCoreBroker
 
 iot = IotCore()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    iot.start_broker()
+    IotCoreBroker("Broker").run_forever()
     iot.background_loop_forever()
     yield
 
