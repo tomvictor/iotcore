@@ -1,9 +1,9 @@
-class _IotCore:
+class IotCoreRs:
     """
     IotCore main class
     """
 
-    def __init__(self, server, port, callback) -> _IotCore:
+    def __init__(self, server, port, callback) -> IotCoreRs:
         """
         Init function
         :param server: server host
@@ -43,3 +43,23 @@ class _IotCore:
         """
         ...
 
+    def re_connect_to_broker(self):
+        pass
+
+class IotCoreBroker:
+    """
+    IotCoreBroker main class
+    """
+
+    def __init__(self, name) -> IotCoreBroker:
+        """
+        Init function
+        :param name: server name
+        """
+        ...
+
+    def run_forever(self) -> None:
+        """
+        Run Broker
+        """
+        ...

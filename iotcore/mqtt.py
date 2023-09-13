@@ -1,4 +1,4 @@
-from iotcore._iotcore import _IotCore
+from iotcore._iotcore import IotCoreRs
 
 
 class MqttBroker(object):
@@ -7,7 +7,7 @@ class MqttBroker(object):
     """
 
     def __init__(self):
-        self._core = _IotCore("", 1883, self.iot_core_callback)
+        self._core = IotCoreRs("", 1883, self.iot_core_callback)
 
     def start_broker(self) -> None:
         self._core.initialize_broker()
@@ -32,7 +32,7 @@ class IotCore(object):
     """
 
     def __init__(self):
-        self._core = _IotCore("", 1883, self.iot_core_callback)
+        self._core = IotCoreRs("", 1883, self.iot_core_callback)
         self.subscribed_topics = dict()
 
     def start_broker(self) -> None:
@@ -45,6 +45,12 @@ class IotCore(object):
         subscription = Subscription(topic, callback)
         self.subscribed_topics[subscription.hash] = subscription
         self._core.subscribe(topic)
+
+    def publish(self, topic, data):
+        self._core.publish(topic, data)
+
+    def reconnect(self):
+        self._core.re_connect_to_broker()
 
     def iot_core_callback(self, topic, data):
         try:

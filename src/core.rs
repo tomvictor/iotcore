@@ -2,12 +2,13 @@ use std::net::TcpListener;
 use pyo3::prelude::*;
 use rumqttc::{Client, Connection, MqttOptions, QoS, Event, Incoming};
 use std::thread;
-use std::time::Duration;
-use rumqttd::{Broker, Config};
 use std::sync::mpsc;
+use std::str;
+use bytes::Bytes;
 
+use paho_mqtt as mqtt;
 
-use bytes::{Bytes};
+use std::{process, time::Duration};
 
 pub struct Msg {
     pub topic: String,
@@ -15,51 +16,61 @@ pub struct Msg {
 }
 
 #[pyclass]
-pub struct _IotCore {
+pub struct IotCoreRs {
     client: Client,
     connection: Connection,
     callback: PyObject,
+    pub(crate) cli: Option<paho_mqtt::Client>
 }
 
 #[pymethods]
-impl _IotCore {
+impl IotCoreRs {
     #[new]
     fn new(host: &str, port: u16, callback: PyObject) -> Self {
         let mqttoptions = MqttOptions::new("iotcore", host, port);
         let (client, connection) = Client::new(mqttoptions, 10);
-        Self { client, connection, callback }
-    }
 
-    fn subscribe(&mut self, topic: &str) -> PyResult<()> {
-        let topic = topic.to_owned();
-        self.client
-            .subscribe(&topic, QoS::AtLeastOnce)
-            .unwrap();
-        Ok(())
-    }
+        // let cli = None;
 
-    fn initialize_broker(&mut self) -> PyResult<()> {
-        println!("Rust: starting mqtt server...");
+        let local_broker_host = "mqtt://broker.hivemq.com:1883".to_string();
 
-        let config = config::Config::builder()
-            .add_source(config::File::with_name("mqtt.toml"))
-            .build()
-            .unwrap();
-
-        let config: Config = config.try_deserialize().unwrap();
-
-        dbg!(&config);
-        let mut broker = Broker::new(config);
-
-        thread::spawn(move || {
-            broker.start().unwrap()
+        let mut mq_cli = mqtt::Client::new(local_broker_host).unwrap_or_else(|e| {
+            println!("Error creating the client: {:?}", e);
+            process::exit(1);
         });
+        mq_cli.set_timeout(Duration::from_secs(5));
 
-        // TODO: Add bool logic
+        if let Err(e) = mq_cli.connect(None) {
+            println!("Unable to connect: {:?}", e);
+            process::exit(1);
+        }
 
-        // self.begin_subscription().expect("Failed to begin subscription");
 
-        Ok(())
+        let mut cli = Some(mq_cli);
+
+
+        Self { client, connection, callback, cli}
+    }
+    fn re_connect_to_broker(&mut self) {
+        let local_broker_host = "mqtt://localhost:1883".to_string();
+
+        let mut cli = mqtt::Client::new(local_broker_host).unwrap_or_else(|e| {
+            println!("Error creating the client: {:?}", e);
+            process::exit(1);
+        });
+        cli.set_timeout(Duration::from_secs(5));
+
+        let conn_opts = mqtt::ConnectOptionsBuilder::new_v3()
+            .connect_timeout(Duration::from_secs(5))
+            .finalize();
+
+        if let Err(e) = cli.connect(conn_opts) {
+            println!("Unable to connect: {:?}", e);
+            process::exit(1);
+        }
+
+        self.cli = Option::from(cli);
+
     }
 
     fn is_port_available(&mut self, port: u16) -> bool {
@@ -70,17 +81,34 @@ impl _IotCore {
     }
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {
-        let topic = topic.to_owned();
-        let data = data.to_owned();
+        println!("rust: publish, {:?}", topic);
+
+        // self.re_connect_to_broker();
+
+        let msg = mqtt::MessageBuilder::new()
+            .topic("test")
+            .payload("Hello synchronous world!")
+            .qos(1)
+            .finalize();
+
+
+        if let Err(e) = self.cli.as_mut().unwrap().publish(msg) {
+            println!("Error sending message: {:?}", e);
+        }
+
+        Ok(())
+    }
+
+    fn subscribe(&mut self, topic: &str) -> PyResult<()> {
+        println!("rust: subscribe");
+        let topic_to_be_subscribed = topic.to_owned();
         self.client
-            .publish(&topic, QoS::AtLeastOnce, false, data)
+            .publish("subscribe", QoS::AtLeastOnce, false, topic_to_be_subscribed)
             .unwrap();
         Ok(())
     }
 
     fn begin_subscription(&mut self) -> PyResult<()> {
-        thread::sleep(Duration::from_secs(2));
-
         let (tx, rx) = mpsc::channel();
 
         thread::spawn(move || {
@@ -96,13 +124,22 @@ impl _IotCore {
             for notification in connection.iter() {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
-                        let resp = format!("{:?}", publish.payload);
-                        let data = Msg {
-                            topic: publish.topic,
-                            data: publish.payload,
-                        };
-                        tx.send(data).expect("Failed to send payload via channels");
+                        println!("topic: {:?}", publish.topic );
+                        if publish.topic == "subscribe" {
+                            let topic_buf = publish.payload.clone().to_vec();
+                            let topic_str = str::from_utf8(&topic_buf).unwrap();
+                            println!("subscribing to {:?}",topic_str);
+                            client.subscribe(topic_str,QoS::ExactlyOnce)
+                                .unwrap();
+                        }else {
+                            println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
+                            let resp = format!("{:?}", publish.payload);
+                            let data = Msg {
+                                topic: publish.topic,
+                                data: publish.payload,
+                            };
+                            tx.send(data).expect("Failed to send payload via channels");
+                        }
                     }
                     Err(e) => {
                         println!("Error = {:?}", e);
