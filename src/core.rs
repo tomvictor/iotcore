@@ -2,7 +2,6 @@ use std::net::TcpListener;
 use pyo3::prelude::*;
 use rumqttc::{Client, Connection, MqttOptions, QoS, Event, Incoming};
 use std::thread;
-use rumqttd::{Broker, Config};
 use std::sync::mpsc;
 use std::str;
 use bytes::Bytes;

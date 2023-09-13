@@ -7,7 +7,8 @@ iot = IotCore()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    IotCoreBroker("Broker").run_forever()
+    broker = IotCoreBroker("Broker")
+    broker.run_forever()
     iot.background_loop_forever()
     yield
 
