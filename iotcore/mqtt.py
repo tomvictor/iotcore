@@ -49,6 +49,9 @@ class IotCore(object):
     def publish(self, topic, data):
         self._core.publish(topic, data)
 
+    def reconnect(self):
+        self._core.re_connect_to_broker()
+
     def iot_core_callback(self, topic, data):
         try:
             subscription = self.subscribed_topics[hash(topic)]

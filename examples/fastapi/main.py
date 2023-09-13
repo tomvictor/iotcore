@@ -34,3 +34,9 @@ def read_root():
 def read_root():
     iot.publish("iot", "test")
     return {"response": "published"}
+
+
+@app.get("/reconnect")
+def read_root():
+    iot.reconnect()
+    return {"response": "ok"}

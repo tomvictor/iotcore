@@ -2,13 +2,14 @@ use std::net::TcpListener;
 use pyo3::prelude::*;
 use rumqttc::{Client, Connection, MqttOptions, QoS, Event, Incoming};
 use std::thread;
-use std::time::Duration;
 use rumqttd::{Broker, Config};
 use std::sync::mpsc;
 use std::str;
-use bytes::{Bytes};
+use bytes::Bytes;
 
+use paho_mqtt as mqtt;
 
+use std::{process, time::Duration};
 
 pub struct Msg {
     pub topic: String,
@@ -20,6 +21,7 @@ pub struct IotCoreRs {
     client: Client,
     connection: Connection,
     callback: PyObject,
+    pub(crate) cli: Option<paho_mqtt::Client>
 }
 
 #[pymethods]
@@ -28,14 +30,48 @@ impl IotCoreRs {
     fn new(host: &str, port: u16, callback: PyObject) -> Self {
         let mqttoptions = MqttOptions::new("iotcore", host, port);
         let (client, connection) = Client::new(mqttoptions, 10);
-        Self { client, connection, callback }
+
+        // let cli = None;
+
+        let local_broker_host = "mqtt://broker.hivemq.com:1883".to_string();
+
+        let mut mq_cli = mqtt::Client::new(local_broker_host).unwrap_or_else(|e| {
+            println!("Error creating the client: {:?}", e);
+            process::exit(1);
+        });
+        mq_cli.set_timeout(Duration::from_secs(5));
+
+        if let Err(e) = mq_cli.connect(None) {
+            println!("Unable to connect: {:?}", e);
+            process::exit(1);
+        }
+
+
+        let mut cli = Some(mq_cli);
+
+
+        Self { client, connection, callback, cli}
     }
     fn re_connect_to_broker(&mut self) {
-        println!("Reconnecting client...");
-        let mqttoptions = MqttOptions::new("iotcore", "127.0.0.1", 1883);
-        let (client, connection) = Client::new(mqttoptions, 10);
-        self.client = client;
-        self.connection = connection;
+        let local_broker_host = "mqtt://localhost:1883".to_string();
+
+        let mut cli = mqtt::Client::new(local_broker_host).unwrap_or_else(|e| {
+            println!("Error creating the client: {:?}", e);
+            process::exit(1);
+        });
+        cli.set_timeout(Duration::from_secs(5));
+
+        let conn_opts = mqtt::ConnectOptionsBuilder::new_v3()
+            .connect_timeout(Duration::from_secs(5))
+            .finalize();
+
+        if let Err(e) = cli.connect(conn_opts) {
+            println!("Unable to connect: {:?}", e);
+            process::exit(1);
+        }
+
+        self.cli = Option::from(cli);
+
     }
 
     fn initialize_broker(&mut self) -> PyResult<()> {
@@ -74,11 +110,20 @@ impl IotCoreRs {
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {
         println!("rust: publish, {:?}", topic);
-        let topic = topic.to_owned();
-        let data = data.to_owned();
-        self.client
-            .publish("iot", QoS::AtLeastOnce, false, data)
-            .unwrap();
+
+        // self.re_connect_to_broker();
+
+        let msg = mqtt::MessageBuilder::new()
+            .topic("test")
+            .payload("Hello synchronous world!")
+            .qos(1)
+            .finalize();
+
+
+        if let Err(e) = self.cli.as_mut().unwrap().publish(msg) {
+            println!("Error sending message: {:?}", e);
+        }
+
         Ok(())
     }
 

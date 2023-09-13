@@ -14,6 +14,7 @@ rumqttc = "0.22.0"
 rumqttd = "0.17.0"
 config = "0.13"
 bytes = "1"
+paho-mqtt = "0.12.1"
 
 [package.metadata.maturin]
 name = "iotcore._iotcore"
