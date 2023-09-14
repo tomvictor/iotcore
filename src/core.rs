@@ -16,7 +16,7 @@ pub struct Msg {
 #[pyclass]
 pub struct IotCoreRs {
     client: Client,
-    connection: Connection,
+    p_connection: Box<Connection>,
     callback: PyObject,
 }
 
@@ -26,7 +26,9 @@ impl IotCoreRs {
     fn new(host: &str, port: u16, callback: PyObject) -> Self {
         let mqttoptions = MqttOptions::new("iotcore", host, port);
         let (client, connection) = Client::new(mqttoptions, 10);
-        Self { client, connection, callback }
+
+        let p_connection = Box::new(connection);
+        Self { client, p_connection, callback }
     }
     fn re_connect_to_broker(&mut self) -> PyResult<()> {
         Ok(())
@@ -41,6 +43,10 @@ impl IotCoreRs {
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {
         println!("rust: publish, {:?}", topic);
+        let topic_to_be_subscribed = topic.to_owned();
+        self.client
+            .publish(topic_to_be_subscribed, QoS::AtLeastOnce, false, data)
+            .unwrap();
         Ok(())
     }
 
@@ -48,12 +54,13 @@ impl IotCoreRs {
         println!("rust: subscribe");
         let topic_to_be_subscribed = topic.to_owned();
         self.client
-            .publish("subscribe", QoS::AtLeastOnce, false, topic_to_be_subscribed)
+            .publish("internal", QoS::AtLeastOnce, false, topic_to_be_subscribed)
             .unwrap();
         Ok(())
     }
 
     fn begin_subscription(&mut self) -> PyResult<()> {
+
         let (tx, rx) = mpsc::channel();
 
         thread::spawn(move || {
@@ -70,7 +77,7 @@ impl IotCoreRs {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
                         println!("topic: {:?}", publish.topic);
-                        if publish.topic == "subscribe" {
+                        if publish.topic == "internal" {
                             let topic_buf = publish.payload.clone().to_vec();
                             let topic_str = str::from_utf8(&topic_buf).unwrap();
                             println!("subscribing to {:?}", topic_str);
