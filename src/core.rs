@@ -20,7 +20,7 @@ pub struct IotCoreRs {
     client: Client,
     connection: Connection,
     callback: PyObject,
-    pub(crate) cli: Option<paho_mqtt::Client>
+    pub(crate) cli: Option<paho_mqtt::Client>,
 }
 
 #[pymethods]
@@ -49,7 +49,7 @@ impl IotCoreRs {
         let mut cli = Some(mq_cli);
 
 
-        Self { client, connection, callback, cli}
+        Self { client, connection, callback, cli }
     }
     fn re_connect_to_broker(&mut self) {
         let local_broker_host = "mqtt://localhost:1883".to_string();
@@ -70,7 +70,6 @@ impl IotCoreRs {
         }
 
         self.cli = Option::from(cli);
-
     }
 
     fn is_port_available(&mut self, port: u16) -> bool {
@@ -124,14 +123,14 @@ impl IotCoreRs {
             for notification in connection.iter() {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("topic: {:?}", publish.topic );
+                        println!("topic: {:?}", publish.topic);
                         if publish.topic == "subscribe" {
                             let topic_buf = publish.payload.clone().to_vec();
                             let topic_str = str::from_utf8(&topic_buf).unwrap();
-                            println!("subscribing to {:?}",topic_str);
-                            client.subscribe(topic_str,QoS::ExactlyOnce)
+                            println!("subscribing to {:?}", topic_str);
+                            client.subscribe(topic_str, QoS::ExactlyOnce)
                                 .unwrap();
-                        }else {
+                        } else {
                             println!("notification loop > {:?}: {:?}", publish.topic, publish.payload);
                             let resp = format!("{:?}", publish.payload);
                             let data = Msg {
