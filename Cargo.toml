@@ -15,8 +15,10 @@ rumqttd = "0.17.0"
 config = "0.13"
 bytes = "1"
 paho-mqtt = "0.12.1"
+openssl-sys = "0.9.93"
 
 [package.metadata.maturin]
 name = "iotcore._iotcore"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 rumqttc = "0.20.0"
+openssl-sys = "0.9.93"
