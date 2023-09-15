@@ -16,9 +16,10 @@ class IotCore(object):
 
     """
 
-    def __init__(self, host="localhost", port=1883):
+    def __init__(self, host="localhost", port=1883, convert_to_str=True):
         self._core = IotCoreRs(host, port, self.iot_core_callback)
         self.subscribed_topics = dict()
+        self.convert_to_str = convert_to_str
 
     def background_loop_forever(self):
         self._core.begin_subscription()
@@ -34,6 +35,11 @@ class IotCore(object):
     def iot_core_callback(self, topic, data):
         try:
             subscription = self.subscribed_topics[hash(topic)]
-            subscription.callback(data)
+            if self.convert_to_str:
+                data_array = bytes(data)
+                data_string = data_array.decode('utf-8')
+                subscription.callback(data_string)
+            else:
+                subscription.callback(data)
         except KeyError:
             print(f"invalid topic : {topic}")

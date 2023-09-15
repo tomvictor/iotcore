@@ -52,7 +52,7 @@ impl IotCoreRs {
             for notification in connection.iter() {
                 match notification {
                     Ok(Event::Incoming(Incoming::Publish(publish))) => {
-                        println!("topic: {:?}", publish.topic);
+                        // println!("topic: {:?}", publish.topic);
                         let data = Msg {
                             topic: publish.topic,
                             data: publish.payload,
@@ -103,7 +103,6 @@ impl IotCoreRs {
                 // Lock the mutex to access the receiver
                 let received = ref_rx_channel.lock().unwrap().recv();
                 if let Ok(received) = received {
-                    println!("Channel rx loop");
                     Python::with_gil(|py| {
                         let byte_array: Vec<u8> = received.data.to_vec();
                         ref_python_callback.call1(py, (received.topic, byte_array, )).expect(

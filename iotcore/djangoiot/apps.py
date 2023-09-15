@@ -13,7 +13,6 @@ class IotConfig(AppConfig):
             print("Starting MQTT server!")
             os.environ["MQTT_SERVER_RUNNING"] = "true"
             iot = IotCore()
-            iot.start_broker()
             iot.background_loop_forever()
         else:
             print("Server already running!")
