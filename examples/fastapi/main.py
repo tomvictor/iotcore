@@ -1,14 +1,12 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from iotcore import IotCore, IotCoreBroker
+from iotcore import IotCore
 
 iot = IotCore()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    broker = IotCoreBroker("Broker")
-    broker.run_forever()
     iot.background_loop_forever()
     yield
 
@@ -36,8 +34,3 @@ def read_root():
     iot.publish("iot", "test")
     return {"response": "published"}
 
-
-@app.get("/reconnect")
-def read_root():
-    iot.reconnect()
-    return {"response": "ok"}

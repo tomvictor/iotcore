@@ -43,8 +43,6 @@ class IotCoreRs:
         """
         ...
 
-    def re_connect_to_broker(self):
-        pass
 
 class IotCoreBroker:
     """
