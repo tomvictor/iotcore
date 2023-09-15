@@ -24,13 +24,24 @@ pub struct IotCoreRs {
 }
 
 
+fn port_available(port: u16) -> bool {
+    match TcpListener::bind(("127.0.0.1", port)) {
+        Ok(_) => { true }
+        Err(_) => {
+            println!("Port not available");
+            false
+        }
+    }
+}
+
 #[pymethods]
 impl IotCoreRs {
     #[new]
     fn new(host: &str, port: u16, callback: PyObject) -> Self {
         let (host, port) = {
             if host == "localhost" {
-                start_mqtt_broker();
+                let port_status = port_available(1883);
+                if port_status { start_mqtt_broker() };
                 ("localhost", 1883)
             } else {
                 (host, port)
@@ -71,13 +82,6 @@ impl IotCoreRs {
 
 
         Self { client, callback, tx, rx: rx_arc }
-    }
-
-    fn is_port_available(&mut self, port: u16) -> bool {
-        match TcpListener::bind(("127.0.0.1", port)) {
-            Ok(_) => { true }
-            Err(_) => { false }
-        }
     }
 
     fn publish(&mut self, topic: &str, data: &str) -> PyResult<()> {

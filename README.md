@@ -100,10 +100,25 @@ def pub():
 
 Then add iotcore to the django apps as below in the settings.py file of your project
 ```python
-INSTALLED_APPS = [
-    "Other Apps here",
-    "iotcore.djangoiot"
-]
+from django.http import JsonResponse
+from iotcore import IotCore
+
+iot = IotCore()
+iot.background_loop_forever()
+
+
+def mqtt_callback(data):
+    print(f"Django >: {data}")
+
+
+def subscribe(request):
+    iot.subscribe("iot", mqtt_callback)
+    return JsonResponse({"response": "subscribed"})
+
+
+def publish(request):
+    iot.publish("iot", "demo")
+    return JsonResponse({"response": "published"})
 ```
 
 Now Connect to mqtt broker on localhost  
