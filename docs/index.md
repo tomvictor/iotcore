@@ -1,5 +1,9 @@
 # Iotcore - Python MQTT Broker and IoT Features for Django and FastAPI
 
+[![.github/workflows/CI.yml](https://github.com/tomvictor/iotcore/actions/workflows/CI.yml/badge.svg)](https://github.com/tomvictor/iotcore/actions/workflows/CI.yml)
+[![](https://img.shields.io/pypi/v/iotcore?color=%2334D058&label=pypi%20package)](https://pypi.org/project/iotcore)
+[![](https://img.shields.io/pypi/pyversions/fastapi.svg?color=%2334D058)](https://pypi.org/project/iotcore)
+
 The project aims to give full support for mqtt broker and related apis. The internals of the mqtt server is  written in  
 Rust using popular Tokio framework. Motive of the project is to avoid the GIL limitation of python and bring all the  fun features offered by rust.
 
