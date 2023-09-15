@@ -7,7 +7,7 @@ edit_uri: 'https://github.com/tomvictor/iotcore'
 
 nav:
   - Getting Started: index.md
-#  - Developer Guide: development.md
+  - Broker Configuration: config.md
 
 
 theme:
