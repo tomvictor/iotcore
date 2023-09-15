@@ -68,7 +68,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
-def read_root():
+def home():
     return {"Hello": "World"}
 
 
@@ -77,15 +77,17 @@ def mqtt_callback(data):
 
 
 @app.get("/sub")
-def read_root():
+def sub():
     iot.subscribe("iot", mqtt_callback)
     return {"response": "subscribed"}
 
 
 @app.get("/pub")
-def read_root():
+def pub():
     iot.publish("iot", "test")
     return {"response": "published"}
+
+
 
 ```
 
