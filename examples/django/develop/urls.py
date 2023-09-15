@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from iot import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("sub", views.subscribe),
+    path("pub", views.publish),
 ]
