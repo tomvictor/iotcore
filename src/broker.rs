@@ -10,7 +10,6 @@ pub struct IotCoreBroker {
 
 #[pymethods]
 impl IotCoreBroker {
-
     #[new]
     fn new(name: &str) -> Self {
         let name = String::from(name);

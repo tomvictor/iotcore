@@ -1,11 +1,9 @@
 [package]
-name = "mqtt_rs"
+name = "rumqttcl"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-paho-mqtt = "0.12.1"
-openssl = { version = "0.10", features = ["vendored"] }
-openssl-sys = "0.9.93"
+rumqttc = "0.22.0"

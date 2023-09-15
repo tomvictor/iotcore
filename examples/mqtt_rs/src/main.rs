@@ -4,9 +4,7 @@ use paho_mqtt as mqtt;
 fn main() {
     // Initialize the logger from the environment
     // Create a client & define connect options
-    let host = env::args()
-        .nth(1)
-        .unwrap_or_else(|| "mqtt://0.0.0.0:1883".to_string());
+    let host = "mqtt://localhost:1883".to_string();
 
     let mut cli = mqtt::Client::new(host).unwrap_or_else(|e| {
         println!("Error creating the client: {:?}", e);
