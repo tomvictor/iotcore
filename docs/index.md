@@ -28,7 +28,7 @@ pip install iotcore
 ```
 
 Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from
-https://github.com/tomvictor/iotcore
+https://tomvictor.github.io/iotcore/config/
 
 
 ## FastAPI setup

@@ -28,12 +28,12 @@ pip install iotcore
 ```
 
 Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from
-https://github.com/tomvictor/iotcore    
+https://tomvictor.github.io/iotcore/config/
 
 
 ## FastAPI setup
 
-**Broker only**  
+**Broker only**
 
 ```python
 from fastapi import FastAPI
@@ -108,7 +108,7 @@ MQTT Port : 1883
 ## Run Example project
 
 
-**Django**  
+**Django**
 
 ```shell
 pip install iotcore
@@ -117,7 +117,7 @@ pip install django
 python examples/django/manage.py runserver
 ```
 
-**FastAPI**  
+**FastAPI**
 
 ```shell
 pip install iotcore
@@ -129,7 +129,7 @@ uvicorn examples.fastapi.main:app
 
 Open you mqtt client and use below details to connect to the broker:  
 **_Host_**: **127.0.0.1** or  **localhost**  
-**_Port_**: **1883**  
+**_Port_**: **1883**
 
 ## Contribute
 
