@@ -98,7 +98,6 @@ def pub():
 
 ## Django Setup
 
-Then add iotcore to the django apps as below in the settings.py file of your project
 ```python
 from django.http import JsonResponse
 from iotcore import IotCore
