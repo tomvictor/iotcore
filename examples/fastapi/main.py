@@ -34,3 +34,7 @@ def pub():
     iot.publish("iot", "test")
     return {"response": "published"}
 
+
+@iot.accept(topic="request/temperature/data")
+def temperature_data(request):
+    print(request)
