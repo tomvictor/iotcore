@@ -699,7 +699,7 @@ checksum = "bfa799dd5ed20a7e349f3b4639aa80d74549c81716d9ec4f994c9b5815598306"
 
 [[package]]
 name = "iotcore"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "bytes",
  "config",

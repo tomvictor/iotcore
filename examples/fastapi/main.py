@@ -14,9 +14,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/")
-def home():
-    return {"Hello": "World"}
+@iot.accept(topic="temperature")
+def temperature_data(request):
+    print(f"Temperature data : {request}")
 
 
 def mqtt_callback(data):
@@ -31,10 +31,10 @@ def sub():
 
 @app.get("/pub")
 def pub():
-    iot.publish("iot", "test")
+    iot.publish("temperature", "{'temp': 18}")
     return {"response": "published"}
 
 
-@iot.accept(topic="request/temperature/data")
-def temperature_data(request):
-    print(request)
+@app.get("/")
+def home():
+    return {"Hello": "World"}

@@ -46,7 +46,7 @@ class IotCore(object):
 
     def accept(self, topic):
         def decorator(func):
-            self.subscribed_topics[hash(topic)] = func  # Store the topic and callback function in the dictionary
+            self.subscribe(topic, func)
 
             def wrapper(request):
                 func(request)
@@ -54,4 +54,3 @@ class IotCore(object):
             return wrapper
 
         return decorator
-
