@@ -43,3 +43,14 @@ class IotCore(object):
                 subscription.callback(data)
         except KeyError:
             print(f"invalid topic : {topic}")
+
+    def accept(self, topic):
+        def decorator(func):
+            self.subscribe(topic, func)
+
+            def wrapper(request):
+                func(request)
+
+            return wrapper
+
+        return decorator
