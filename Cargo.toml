@@ -10,7 +10,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0.28.0", features = ["py-clone"] }
+pyo3-log = "0.13"
+log = "0.4"
 rumqttc = "0.25.0"
 rumqttd = "0.20.0"
 config = "0.15.19"
-bytes = "1"

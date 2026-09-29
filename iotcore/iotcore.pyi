@@ -1,71 +1,38 @@
+from typing import Callable, Optional
+
 class IotCoreRs:
-    """
-    IotCore main class
-    """
+    """Native MQTT client. Use ``iotcore.IotCore`` instead."""
 
-    def __init__(self, server, port, callback) -> IotCoreRs:
-        """
-        Init function
-        :param server: server host
-        :param port: port
-        :param callback: call back function
-        """
-        ...
-
-    def publish(self, topic: str, data: str):
-        """
-        Publish date over mqtt
-        :param topic: topic
-        :param data: data
-        :return: None
-        """
-        ...
-
-    def subscribe(self, topic):
-        """
-        subscribe to mqtt topic
-        :param topic:
-        :return:
-        """
-        ...
-    
-    def unsubscribe(self, topic):
-        """
-        unsubscribe to mqtt topic
-        :param topic:
-        :return:
-        """
-        ...
-    
-    def initialize_broker(self):
-        """
-        Run mqtt broker
-        :return: None
-        """
-        ...
-
-    def begin_subscription(self):
-        """
-        Run mqtt broker
-        :return: None
-        """
-        ...
-
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        callback: Callable[[str, bytes], object],
+        client_id: Optional[str] = None,
+        keep_alive_secs: int = 5,
+    ) -> None: ...
+    @property
+    def client_id(self) -> str: ...
+    def publish(self, topic: str, payload: bytes, qos: int = 1, retain: bool = False) -> None: ...
+    def subscribe(self, topic: str, qos: int = 0) -> None: ...
+    def unsubscribe(self, topic: str) -> None: ...
+    def disconnect(self) -> None: ...
+    def begin_subscription(self) -> None: ...
 
 class IotCoreBroker:
-    """
-    IotCoreBroker main class
-    """
+    """Native embedded broker. Use ``iotcore.Broker`` instead."""
 
-    def __init__(self, name) -> IotCoreBroker:
-        """
-        Init function
-        :param name: server name
-        """
-        ...
-
-    def run_forever(self) -> None:
-        """
-        Run Broker
-        """
-        ...
+    def __init__(
+        self,
+        config_path: Optional[str] = None,
+        listen: str = "0.0.0.0",
+        port: int = 1883,
+        max_connections: int = 10_000,
+        max_payload_size: int = 20_480,
+        max_inflight_count: int = 100,
+        connection_timeout_ms: int = 60_000,
+    ) -> None: ...
+    def listeners(self) -> list[str]: ...
+    def check_ports(self) -> None: ...
+    def run_forever(self) -> None: ...
+    def start(self) -> None: ...

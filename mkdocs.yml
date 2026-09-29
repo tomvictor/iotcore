@@ -9,6 +9,7 @@ nav:
   - Getting Started: index.md
   - Broker Configuration: config.md
   - Development & Testing: development.md
+  - Changelog: changelog.md
 
 
 theme:

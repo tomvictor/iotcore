@@ -1,8 +1,27 @@
 
-# MQTT Broker config
+# Broker Configuration
 
+By default `Broker(port=1883)` and `IotCore()` run a single plain MQTT v4 listener. For anything
+more (TLS, websockets, MQTT v5, authentication, prometheus metrics) write a
+[rumqttd](https://github.com/bytebeamio/rumqtt/tree/main/rumqttd) TOML file and pass its path:
 
-Create a new file called **mqtt.toml** on the project root and paste the config below.
+```python
+from iotcore import Broker, IotCore
+
+Broker(config_path="mqtt.toml")
+IotCore(broker_config="mqtt.toml")
+```
+
+or on the command line:
+
+```bash
+python -m iotcore --config mqtt.toml
+```
+
+The keyword arguments `listen`, `port`, `max_connections`, `max_payload_size`,
+`max_inflight_count` and `connection_timeout_ms` tune the default listener without a file.
+
+A complete sample (also in `examples/mqtt.toml`):
 
 ```toml
 

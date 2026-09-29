@@ -1,19 +1,29 @@
 from django.http import JsonResponse
+
 from iotcore import IotCore
 
+# Django's runserver autoreloader runs this module twice; the second IotCore sees the
+# port is taken and only connects a client instead of starting another broker.
 iot = IotCore()
-iot.background_loop_forever()
+iot.start()
+latest = {}
 
 
-def mqtt_callback(data):
-    print(f"Django >: {data}")
+@iot.accept("sensors/#")
+def on_sensor(topic, data):
+    latest[topic] = data
 
 
-def subscribe(request):
-    iot.subscribe("iot", mqtt_callback)
-    return JsonResponse({"response": "subscribed"})
+def home(request):
+    return JsonResponse({"latest": latest})
 
 
 def publish(request):
-    iot.publish("iot", "demo")
-    return JsonResponse({"response": "published"})
+    topic = request.GET.get("topic", "sensors/temperature")
+    iot.publish(topic, request.GET.get("data", "21.5"))
+    return JsonResponse({"published": topic})
+
+
+def unsubscribe(request):
+    iot.unsubscribe("sensors/#")
+    return JsonResponse({"unsubscribed": "sensors/#"})

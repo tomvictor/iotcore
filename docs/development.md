@@ -2,7 +2,8 @@
 
 Iotcore is a mixed Rust / Python project. The MQTT broker and client live in `src/` and are
 compiled into the extension module `iotcore.iotcore` with [maturin](https://www.maturin.rs/).
-The Python API that most users touch lives in `iotcore/mqtt.py`.
+The public API lives in `iotcore/mqtt.py` (`IotCore`) and `iotcore/broker.py` (`Broker`).
+`iotcore/_serve.py` is the entry point of the broker child process.
 
 ## Prerequisites
 
@@ -39,11 +40,11 @@ The test suite has two layers:
 
 | File | What it covers | Needs |
 | --- | --- | --- |
-| `tests/test_mqtt.py` | The Python wrapper (`IotCore`): subscribe, unsubscribe, publish, callback dispatch and the `@accept` decorator. The Rust core is replaced with a fake. | nothing |
-| `tests/test_broker_integration.py` | Round trips through the real Rust client and the embedded rumqttd broker: publish/subscribe delivery, `unsubscribe` stopping delivery, re-subscribing, and multi-topic dispatch. | free ports 1883, 1884, 8083, 3030 and 9042 (from `mqtt.toml`) |
+| `tests/test_mqtt.py` | The Python wrapper (`IotCore`): topic matching, subscribe/unsubscribe/publish, callback dispatch (sync and async), the `@accept` decorator. The Rust client is replaced with a fake. | nothing |
+| `tests/test_broker.py` | `Broker` lifecycle: start/stop, port release, busy ports, config files, orphan cleanup and the CLI. | free ports 18884-18885 |
+| `tests/test_integration.py` | Round trips through the real Rust client and broker: delivery, wildcards, unsubscribe, two clients side by side, raw bytes, async callbacks, client-owned broker. | free ports 18883 and 18893 |
 
-The integration tests share one `IotCore` instance for the whole session because every instance
-connects with the same MQTT client id, and a second connection would kick the first one off the broker.
+The suite never touches port 1883, so it runs alongside a broker you may have running.
 
 ## Continuous integration
 

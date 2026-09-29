@@ -1,6 +1,4 @@
-"""Minimal standalone demo: start the embedded broker, subscribe, publish, unsubscribe.
-
-Run from the repository root (the broker reads mqtt.toml from the working directory):
+"""Minimal standalone demo: embedded broker, subscribe, publish, unsubscribe, stop.
 
     python examples/demo.py
 """
@@ -9,23 +7,22 @@ import time
 from iotcore import IotCore
 
 
-def on_temperature(data):
-    print(f"temperature > {data}")
-
-
 def main():
-    iot = IotCore()  # starts the broker on localhost:1883 if nothing is listening there
-    iot.background_loop_forever()
+    with IotCore() as iot:  # starts a broker on localhost:1883 if none is running
 
-    iot.subscribe("temperature", on_temperature)
-    time.sleep(0.5)
+        @iot.accept("sensors/#")
+        def on_sensor(topic, data):
+            print(f"{topic} -> {data}")
 
-    iot.publish("temperature", "{'temp': 18}")
-    time.sleep(0.5)
+        time.sleep(0.3)  # let the subscription settle
+        iot.publish("sensors/temperature", "21.5")
+        iot.publish("sensors/humidity", "40")
+        time.sleep(0.3)
 
-    iot.unsubscribe("temperature")
-    iot.publish("temperature", "not delivered, we unsubscribed")
-    time.sleep(0.5)
+        iot.unsubscribe("sensors/#")
+        iot.publish("sensors/temperature", "not delivered, we unsubscribed")
+        time.sleep(0.3)
+    # client disconnected and broker stopped here
 
 
 if __name__ == "__main__":

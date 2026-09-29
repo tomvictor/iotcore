@@ -1,40 +1,46 @@
-from fastapi import FastAPI
+"""FastAPI app with an embedded MQTT broker and client.
+
+    uvicorn examples.fastapi.main:app
+
+Then connect any MQTT client to localhost:1883, or use the HTTP endpoints below.
+"""
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+
 from iotcore import IotCore
 
-iot = IotCore()
+iot = IotCore()  # starts the broker on localhost:1883 unless one is already running
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    iot.background_loop_forever()
+    iot.start()  # called inside the event loop, so async callbacks work
     yield
+    iot.stop()
 
 
 app = FastAPI(lifespan=lifespan)
+latest = {}
 
 
-@iot.accept(topic="temperature")
-def temperature_data(request):
-    print(f"Temperature data : {request}")
-
-
-def mqtt_callback(data):
-    print(f"iot >: {data}")
-
-
-@app.get("/sub")
-def sub():
-    iot.subscribe("iot", mqtt_callback)
-    return {"response": "subscribed"}
-
-
-@app.get("/pub")
-def pub():
-    iot.publish("temperature", "{'temp': 18}")
-    return {"response": "published"}
+@iot.accept("sensors/#")
+async def on_sensor(topic: str, data: str):
+    latest[topic] = data
 
 
 @app.get("/")
 def home():
-    return {"Hello": "World"}
+    return {"latest": latest}
+
+
+@app.get("/pub")
+def pub(topic: str = "sensors/temperature", data: str = "21.5"):
+    iot.publish(topic, data)
+    return {"published": topic}
+
+
+@app.get("/unsub")
+def unsub():
+    iot.unsubscribe("sensors/#")
+    return {"unsubscribed": "sensors/#"}

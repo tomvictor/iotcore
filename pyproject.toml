@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "iotcore"
-description = "Embedded MQTT broker and client for Python, written in Rust"
+description = "An embedded MQTT broker and client for Python, written in Rust"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 authors = [{ name = "Tom Victor" }]
@@ -21,11 +21,18 @@ classifiers = [
     "Topic :: System :: Networking",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+iotcore = "iotcore.__main__:main"
+
 [project.urls]
 Homepage = "https://iotcore.buildfromzero.com/"
 Documentation = "https://iotcore.buildfromzero.com/"
 Repository = "https://github.com/tomvictor/iotcore"
 Issues = "https://github.com/tomvictor/iotcore/issues"
+Changelog = "https://github.com/tomvictor/iotcore/blob/main/CHANGELOG.md"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
@@ -35,3 +42,5 @@ module-name = "iotcore.iotcore"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# importlib mode keeps the source checkout off sys.path so the installed wheel is what gets tested.
+addopts = "--import-mode=importlib"

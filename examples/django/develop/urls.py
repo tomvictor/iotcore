@@ -20,6 +20,7 @@ from iot import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("sub", views.subscribe),
+    path("", views.home),
     path("pub", views.publish),
+    path("unsub", views.unsubscribe),
 ]
