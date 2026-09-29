@@ -1,17 +1,37 @@
 [build-system]
-requires = ["maturin>=1.11.5"]
+requires = ["maturin>=1.11,<2.0"]
 build-backend = "maturin"
 
 [project]
 name = "iotcore"
-version = "3.0.4"
-requires-python = ">=3.12"
+description = "Embedded MQTT broker and client for Python, written in Rust"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+authors = [{ name = "Tom Victor" }]
+requires-python = ">=3.9"
+# The version is read from Cargo.toml so it only has to be bumped in one place.
+dynamic = ["version"]
+keywords = ["mqtt", "broker", "iot", "rust", "django", "fastapi"]
 classifiers = [
     "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: System :: Networking",
 ]
 
+[project.urls]
+Homepage = "https://iotcore.buildfromzero.com/"
+Documentation = "https://iotcore.buildfromzero.com/"
+Repository = "https://github.com/tomvictor/iotcore"
+Issues = "https://github.com/tomvictor/iotcore/issues"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
+# The compiled extension is placed inside the `iotcore` package as `iotcore.iotcore`
+# and must match the `#[pymodule] mod iotcore` in src/lib.rs.
+module-name = "iotcore.iotcore"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

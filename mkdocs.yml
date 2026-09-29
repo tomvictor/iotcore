@@ -8,6 +8,7 @@ edit_uri: 'https://github.com/tomvictor/iotcore'
 nav:
   - Getting Started: index.md
   - Broker Configuration: config.md
+  - Development & Testing: development.md
 
 
 theme:
@@ -25,7 +26,7 @@ theme:
     - content.code.copy
   language: en
   icon:
-  repo: fontawesome/brands/github
+    repo: fontawesome/brands/github
   palette:
     - scheme: default
       toggle:
@@ -65,8 +66,8 @@ markdown_extensions:
   - pymdownx.mark
   - attr_list
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 copyright: |
   &copy; 2023 <a href="https://github.com/tomvictor"  target="_blank" rel="noopener">Tom Victor</a>

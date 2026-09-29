@@ -7,12 +7,6 @@
 
 A Python package, written in Rust, helps to run MQTT Broker and subscribe to MQTT topics in a multithreaded manner without any extra Python dependency. The internals of the MQTT server are written in Rust using the Tokio framework. The motive of the project is to overcome the GIL limitation, provide simple-to-use MQTT broker Python projects, and bring all the concurrent features offered by Rust to Python.
 
-## Compile
-
-```bash
-uv pip install maturin
-maturin build --release --out dist --find-interpreter
-```
 
 ## Features
 
@@ -34,11 +28,13 @@ maturin build --release --out dist --find-interpreter
 
 ## Installation
 
+Requires Python 3.9 or newer. Pre-built wheels are published for Linux, macOS and Windows.
+
 ```
 pip install iotcore
 ```
 
-Create a new file called mqtt.toml in your root project directory and copy pase the sample mqtt.toml from
+Create a new file called mqtt.toml in your root project directory and copy paste the sample mqtt.toml from
 https://tomvictor.github.io/iotcore/config/
 
 
@@ -99,6 +95,12 @@ def pub():
     return {"response": "published"}
 
 
+@app.get("/unsub")
+def unsub():
+    iot.unsubscribe("iot")
+    return {"response": "unsubscribed"}
+
+
 @app.get("/")
 def home():
     return {"Hello": "World"}
@@ -128,10 +130,28 @@ def subscribe(request):
 def publish(request):
     iot.publish("iot", "demo")
     return JsonResponse({"response": "published"})
+
+
+def unsubscribe(request):
+    iot.unsubscribe("iot")
+    return JsonResponse({"response": "unsubscribed"})
 ```
 
 Now Connect to mqtt broker on localhost  
 MQTT Port : 1883
+
+## Python API
+
+| Method | Description |
+| --- | --- |
+| `IotCore(host="localhost", port=1883, convert_to_str=True)` | Create a client. With the default host, an embedded broker is started on port 1883 if nothing is listening there yet. |
+| `background_loop_forever()` | Start the background thread that delivers incoming messages to your callbacks. |
+| `subscribe(topic, callback)` | Subscribe to `topic`; `callback(data)` is invoked for every message. |
+| `unsubscribe(topic)` | Stop receiving messages for `topic` and drop its callback. |
+| `publish(topic, data)` | Publish a string payload. |
+| `@accept(topic=...)` | Decorator form of `subscribe`. |
+
+Payloads are delivered as `str` (UTF-8 decoded). Pass `convert_to_str=False` to receive the raw bytes instead.
 
 ## Run Example project
 
@@ -158,6 +178,18 @@ uvicorn examples.fastapi.main:app
 Open you mqtt client and use below details to connect to the broker:  
 **_Host_**: **127.0.0.1** or  **localhost**  
 **_Port_**: **1883**
+
+## Development
+
+```bash
+uv venv --python 3.12 .venv && source .venv/bin/activate
+uv pip install maturin pytest
+maturin develop --release
+pytest
+```
+
+See the [development guide](https://iotcore.buildfromzero.com/development/) for details on the
+test layout, CI and how to cut a release.
 
 ## Contribute
 
