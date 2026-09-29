@@ -1,4 +1,4 @@
-from iotcore._iotcore import IotCoreRs
+from iotcore.iotcore import IotCoreRs
 
 
 class Subscription(object):
@@ -28,6 +28,13 @@ class IotCore(object):
         subscription = Subscription(topic, callback)
         self.subscribed_topics[subscription.hash] = subscription
         self._core.subscribe(topic)
+        
+    def unsubscribe(self, topic):
+        topic_hash = hash(topic)
+        if topic_hash in self.subscribed_topics:
+            self.subscribed_topics.pop(topic_hash)
+            self._core.unsubscribe(topic)
+        
 
     def publish(self, topic, data):
         self._core.publish(topic, data)

@@ -18,7 +18,7 @@ pub struct Msg {
 #[pyclass]
 pub struct IotCoreRs {
     client: Client,
-    callback: PyObject,
+    callback: Py<PyAny>,
     tx: mpsc::Sender<Msg>,
     rx: Arc<Mutex<mpsc::Receiver<Msg>>>,
 }
@@ -37,7 +37,7 @@ fn port_available(port: u16) -> bool {
 #[pymethods]
 impl IotCoreRs {
     #[new]
-    fn new(host: &str, port: u16, callback: PyObject) -> Self {
+    fn new(host: &str, port: u16, callback: Py<PyAny>) -> Self {
         let (host, port) = {
             if host == "localhost" {
                 let port_status = port_available(1883);
@@ -97,8 +97,15 @@ impl IotCoreRs {
         self.client.subscribe(topic_to_be_subscribed, QoS::AtMostOnce).unwrap();
         Ok(())
     }
+    
+    fn unsubscribe(&mut self, topic: &str) -> PyResult<()> {
+        let topic_to_be_subscribed = topic.to_owned();
+        self.client.unsubscribe(topic_to_be_subscribed).unwrap();
+        Ok(())
+    }
 
     fn begin_subscription(&mut self) -> PyResult<()> {
+        //add .clone support, pyo3 = {version = "0.28.0", features = ["py-clone"]}
         let ref_python_callback = self.callback.clone();
         let ref_rx_channel = Arc::clone(&self.rx);
 
@@ -107,7 +114,7 @@ impl IotCoreRs {
                 // Lock the mutex to access the receiver
                 let received = ref_rx_channel.lock().unwrap().recv();
                 if let Ok(received) = received {
-                    Python::with_gil(|py| {
+                    Python::attach(|py| {
                         let byte_array: Vec<u8> = received.data.to_vec();
                         ref_python_callback.call1(py, (received.topic, byte_array, )).expect(
                             "Failed to call the python callback",

@@ -28,7 +28,15 @@ class IotCoreRs:
         :return:
         """
         ...
-
+    
+    def unsubscribe(self, topic):
+        """
+        unsubscribe to mqtt topic
+        :param topic:
+        :return:
+        """
+        ...
+    
     def initialize_broker(self):
         """
         Run mqtt broker

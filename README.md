@@ -7,6 +7,12 @@
 
 A Python package, written in Rust, helps to run MQTT Broker and subscribe to MQTT topics in a multithreaded manner without any extra Python dependency. The internals of the MQTT server are written in Rust using the Tokio framework. The motive of the project is to overcome the GIL limitation, provide simple-to-use MQTT broker Python projects, and bring all the concurrent features offered by Rust to Python.
 
+## Compile
+
+```bash
+uv pip install maturin
+maturin build --release --out dist --find-interpreter
+```
 
 ## Features
 
