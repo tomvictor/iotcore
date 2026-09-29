@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "iotcore"
-description = "An embedded MQTT broker and client for Python, written in Rust"
+description = "A real MQTT broker that installs with pip and lives inside your Python process"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 authors = [{ name = "Tom Victor" }]

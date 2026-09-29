@@ -4,14 +4,11 @@
 [![PyPI](https://img.shields.io/pypi/v/iotcore?color=%2334D058&label=pypi%20package)](https://pypi.org/project/iotcore)
 [![Python versions](https://img.shields.io/pypi/pyversions/iotcore.svg?color=%2334D058)](https://pypi.org/project/iotcore)
 
-`pip install iotcore` gives your Python application a real MQTT broker and a client, with no
-external service to run and no Python dependencies. The broker is [rumqttd](https://github.com/bytebeamio/rumqtt)
-and the client is rumqttc, both compiled into a native extension, so the networking runs on
-Rust threads outside the GIL.
+**A real MQTT broker that installs with `pip` and lives inside your Python process.**
 
-Use it when you want MQTT inside a single deployable: prototypes, edge and gateway devices, test
-suites, desktop tools, or a small FastAPI / Django service that talks to a handful of devices
-without standing up Mosquitto or EMQX next to it.
+```
+pip install iotcore
+```
 
 ```python
 from iotcore import IotCore
@@ -28,17 +25,42 @@ iot.publish("sensors/temperature", "21.5")
 iot.stop()                          # disconnects and shuts the broker down
 ```
 
-Point any MQTT client (mosquitto_pub, MQTTX, a microcontroller) at `localhost:1883` and it will
-talk to your app.
+Point any MQTT client (mosquitto_pub, MQTTX, an ESP32) at `localhost:1883` and it talks to your app.
+
+## Why not just run Mosquitto?
+
+You should, if you already operate one. iotcore exists for everything before and around that:
+
+| Situation | With Mosquitto / EMQX | With iotcore |
+| --- | --- | --- |
+| A Python app that needs MQTT | Install a system package or a container, manage its config and lifecycle separately | `pip install iotcore`, start it from your code, stop it with your app |
+| Edge box, Raspberry Pi, kiosk, lab bench | Another service to provision, monitor and upgrade | One Python process, one deployable, one log |
+| Tests for MQTT-driven code | Mock the client, or depend on a broker running on the CI machine | A pytest fixture starts a broker on a free port in ~100 ms and tears it down |
+| Prototypes and workshops | "First install a broker" before anyone sees a message flow | Working in the first five minutes |
+| Desktop tools, simulators, local dashboards | Ask users to run a daemon | Ships inside the tool |
+
+The broker is [rumqttd](https://github.com/bytebeamio/rumqtt): MQTT 3.1.1 and 5, TLS, websockets,
+shared subscriptions, and no Python or system dependencies. It is not a toy broker, and it is not
+a pure-Python reimplementation. It is compiled into the wheel.
+
+## Who this is for
+
+* People shipping small IoT systems who do not want a separate message-broker deployment.
+* Teams testing MQTT-based products who want an honest broker in every test, not a mock.
+* Educators, makers and researchers who want MQTT working before the coffee gets cold.
+* Anyone who has typed `brew install mosquitto` or `docker run eclipse-mosquitto` just to try an idea.
+
+If you outgrow it, nothing changes in your code: point `IotCore(host=...)` at Mosquitto, EMQX or a
+cloud broker and remove the embedded one.
 
 ## Features
 
 * **Embedded broker** with `start()` / `stop()`, a context manager and a CLI (`python -m iotcore`).
 * **Client** with publish, subscribe, unsubscribe, QoS 0-2, retained messages, `+` / `#` wildcards.
 * **Callbacks** as plain functions or `async def` coroutines scheduled on your event loop.
-* **No GIL contention**: the broker and the network loop run on Rust threads.
 * **Full rumqttd configuration** via a TOML file when you need TLS, websockets, MQTT v5 or auth.
 * **Pre-built wheels** for Linux (x86_64, i686, aarch64, armv7), macOS and Windows, Python 3.9+.
+* **Bring your own client**: pair `iotcore.Broker` with paho-mqtt or aiomqtt if you prefer them.
 
 ## Installation
 
@@ -84,6 +106,19 @@ with Broker(port=1883) as broker:
     print(broker.listeners)   # ['0.0.0.0:1883']
     ...
 # stopped and port released
+```
+
+### In your test suite
+
+```python
+# conftest.py
+import pytest
+from iotcore import Broker
+
+@pytest.fixture(scope="session")
+def mqtt_broker():
+    with Broker(port=18883) as broker:
+        yield broker          # every test talks to a real broker on localhost:18883
 ```
 
 From the command line:

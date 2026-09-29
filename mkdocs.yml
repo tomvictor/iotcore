@@ -1,5 +1,5 @@
 site_name: IoTCore
-site_description: Iotcore
+site_description: A real MQTT broker that installs with pip and lives inside your Python process
 site_url: https://iotcore.buildfromzero.com/
 repo_name: github.com/tomvictor/iotcore
 repo_url: https://github.com/tomvictor/iotcore
